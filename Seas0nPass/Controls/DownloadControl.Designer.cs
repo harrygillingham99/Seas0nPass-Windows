@@ -1,4 +1,4 @@
-﻿namespace Seas0nPass
+﻿namespace Seas0nPass.Controls
 {
     partial class DownloadControl
     {

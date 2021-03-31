@@ -6,12 +6,13 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Seas0nPass.Interfaces;
 
-namespace Seas0nPass
+namespace Seas0nPass.Controls
 {
     public partial class DfuControl : UserControl, IDfuView
     {
