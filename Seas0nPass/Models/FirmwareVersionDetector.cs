@@ -20,17 +20,17 @@ namespace Seas0nPass.Models
     public class FirmwareVersionDetector : IFirmwareVersionDetector
     {
         private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(FirmwareVersion));
-        private readonly string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Seas0nPass", "version.xml");
+        private readonly string _fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Seas0nPass", "version.xml");
 
         public FirmwareVersion Version
         {
             get
             {
-                if (!SafeFile.Exists(fileName))
+                if (!SafeFile.Exists(_fileName))
                     return null;
                 try
                 {
-                    using (var fileStream = new FileStream(fileName, FileMode.Open))
+                    using (var fileStream = new FileStream(_fileName, FileMode.Open))
                     {
                         return (FirmwareVersion)_xmlSerializer.Deserialize(fileStream);
                     }
@@ -44,7 +44,7 @@ namespace Seas0nPass.Models
 
         public void SaveState(FirmwareVersion version)
         {
-            using (var fileStream = new FileStream(fileName, FileMode.Create))
+            using (var fileStream = new FileStream(_fileName, FileMode.Create))
             {
                 _xmlSerializer.Serialize(fileStream, version);
             }

@@ -7,18 +7,14 @@
 //
 ////
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Seas0nPass.Models;
 
 namespace Seas0nPass.CustomEventArgs
 {
-    public class CreateIPSWClickedEventArgs : EventArgs
+    public class CreateIpswClickedEventArgs : EventArgs
     {
         public string FileName { get; private set; }
 
-        public CreateIPSWClickedEventArgs(string fileName)
+        public CreateIpswClickedEventArgs(string fileName)
         {
             FileName = fileName;
         }

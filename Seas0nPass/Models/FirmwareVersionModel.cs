@@ -19,34 +19,34 @@ namespace Seas0nPass.Models
 {
     public class FirmwareVersionModel : IFirmwareVersionModel
     {
-        private static readonly string DEFAULT_VERSION = "9A406a";
+        private static readonly string DefaultVersion = "9A406a";
 
         public FirmwareVersionModel()
         {
             InitBinaries();
             InitVersionsList();
-            SelectedVersion = KnownVersions.Where(x => x.Code == DEFAULT_VERSION).FirstOrDefault();
+            SelectedVersion = KnownVersions.Where(x => x.Code == DefaultVersion).FirstOrDefault();
         }
 
         public List<FirmwareVersion> KnownVersions { get; set; }
-        private FirmwareVersion selectedVersion;
+        private FirmwareVersion _selectedVersion;
         public FirmwareVersion SelectedVersion
         {
             get
             {
-                return selectedVersion;
+                return _selectedVersion;
             }
             set
             {
-                customFileLocation = null;
-                selectedVersion = value;
+                _customFileLocation = null;
+                _selectedVersion = value;
             }
         }
 
         public void CheckVersion(string path)
         {
-            var md5 = MiscUtils.ComputeMD5(path);
-            SelectedVersion = KnownVersions.FirstOrDefault(x => x.MD5 == md5);
+            var md5 = MiscUtils.ComputeMd5(path);
+            SelectedVersion = KnownVersions.FirstOrDefault(x => x.Md5 == md5);
         }
 
         private string GetOriginalFileName()
@@ -94,26 +94,26 @@ namespace Seas0nPass.Models
             }
         }
 
-        private string customFileLocation;
+        private string _customFileLocation;
 
         public string ExistingFirmwarePath
         {
             get
             {
-                return String.IsNullOrWhiteSpace(customFileLocation) ? DownloadedFirmwarePath : customFileLocation;
+                return String.IsNullOrWhiteSpace(_customFileLocation) ? DownloadedFirmwarePath : _customFileLocation;
             }
             set
             {
-                customFileLocation = value;
+                _customFileLocation = value;
             }
         }
 
-        public string CorrectFirmwareMD5
+        public string CorrectFirmwareMd5
         {
             get
             {
                 if (SelectedVersion != null)
-                    return SelectedVersion.MD5;
+                    return SelectedVersion.Md5;
                 throw new InvalidOperationException("Unknown firmware version");
             }
 
@@ -152,19 +152,19 @@ namespace Seas0nPass.Models
                 {
                     Code = vars["$fw_code"],
                     Name = vars["$name"],
-                    MD5 = vars["$md5"],
+                    Md5 = vars["$md5"],
                     OriginalFileName = vars["$orig_filename"],
                     PatchedFileName = vars["$patched_filename"],
                     Folder = vars["$folder"],
                     DownloadUrl = vars["$downUrl"],
                     NeedTether = bool.Parse(vars["$needTether"]),
-                    Save_iBEC = bool.Parse(vars["$save_iBEC"]),
+                    SaveIBec = bool.Parse(vars["$save_iBEC"]),
                     CommandsText = commandsText
                 };
             }
         }
 
-        private const string BINARIES_RESOURCE_NAME = "Seas0nPass.Resources.Binaries.zip";
+        private const string BinariesResourceName = "Seas0nPass.Resources.Binaries.zip";
         private void InitBinaries()
         {
 #if DEBUG

@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Seas0nPass.Interfaces;
 using System.Diagnostics;
 using System.Windows.Automation;
 using System.Threading;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.IO;
-using Microsoft.Win32;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models
 {
-    public class ITunesAutomationModel : IITunesAutomationModel
+    public class TunesAutomationModel : IITunesAutomationModel
     {
         public SynchronizationContext SyncContext { get; set; }
         public IFirmwareVersionModel FirmwareVersionModel { get; set; }
-        public IITunesInfoProvider ITunesInfoProvider { get; set; }
+        public IITunesInfoProvider TunesInfoProvider { get; set; }
 
-        private readonly AutomationElement desktop = AutomationElement.RootElement;
+        private readonly AutomationElement _desktop = AutomationElement.RootElement;
         public void Run()
         {
             var iTunesProcess = GetITunesProcess();
@@ -28,7 +25,7 @@ namespace Seas0nPass.Models
             AutomationElement mainForm = null;
             do
             {
-                mainForm = desktop.FindFirst(TreeScope.Children,
+                mainForm = _desktop.FindFirst(TreeScope.Children,
                     new AndCondition(
                         new PropertyCondition(AutomationElement.NameProperty, "iTunes"),
                         new OrCondition(
@@ -47,7 +44,7 @@ namespace Seas0nPass.Models
                 AutomationElement panel;
                 while (true)
                 {
-                    panel = GetAppleTVPanel(mainForm);
+                    panel = GetAppleTvPanel(mainForm);
                     LogControlFound(panel, "aTV panel");
                     if (panel != null) break;
                     Thread.Sleep(100);
@@ -62,13 +59,14 @@ namespace Seas0nPass.Models
                 var mainFormHandle = new IntPtr(mainForm.Current.NativeWindowHandle);
                 SetForegroundWindow(mainFormHandle);
 
-                LogUtil.LogEvent(string.Format("Apple TV panel found! Handle: {0}", panel.Current.NativeWindowHandle.ToString("X")));
+                LogUtil.LogEvent($"Apple TV panel found! Handle: {panel.Current.NativeWindowHandle.ToString("X")}");
 
                 var restoreButton = panel.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.ClassNameProperty, "Button"));
 
                 LogControlFound(restoreButton, "Firmware restore button");
 
-                LogUtil.LogEvent(string.Format("Restore button found! Handle: {0}", restoreButton.Current.NativeWindowHandle.ToString("X")));
+                LogUtil.LogEvent(
+                    $"Restore button found! Handle: {restoreButton.Current.NativeWindowHandle.ToString("X")}");
 
                 SetForegroundWindow(mainFormHandle);
 
@@ -78,21 +76,21 @@ namespace Seas0nPass.Models
 
                 keybd_event((byte)Keys.ShiftKey, (byte)MapVirtualKey((uint)Keys.ShiftKey, 0), 0, UIntPtr.Zero);
 
-                Action _delegate = () =>
+                Action @delegate = () =>
                 {
                     LogUtil.LogEvent("Before Restore Click");
                     ClickButton(restoreButton);
                     LogUtil.LogEvent("After Restore Click");
                 };
 
-                _delegate.BeginInvoke(null, null);
+                @delegate.BeginInvoke(null, null);
 
                 Thread.Sleep(500);
 
                 LogUtil.LogEvent("Releasing Shift");
                 keybd_event((byte)Keys.ShiftKey, (byte)MapVirtualKey((uint)Keys.ShiftKey, 0), 2, UIntPtr.Zero);
 
-                bool confirmOk = false;
+                bool confirmOk;
                 do
                 {
                     dialogOk = WorkInDialog(mainForm);
@@ -133,8 +131,8 @@ namespace Seas0nPass.Models
             var handle = new IntPtr(button.Current.NativeWindowHandle);
             var pointToClick = new IntPtr(ConvertDWord(5, 5));
 
-            long lngResult = SendMessage(handle, WM_LBUTTONDOWN, IntPtr.Zero, pointToClick);
-            lngResult = SendMessage(handle, WM_LBUTTONUP, IntPtr.Zero, pointToClick);
+            SendMessage(handle, WmLbuttondown, IntPtr.Zero, pointToClick);
+            SendMessage(handle, WmLbuttonup, IntPtr.Zero, pointToClick);
 
         }
 
@@ -145,9 +143,9 @@ namespace Seas0nPass.Models
         }
 
         //Left Button - Mouse Down
-        public const int WM_LBUTTONDOWN = 0x0201;
+        public const int WmLbuttondown = 0x0201;
         //Left Button - Mouse Up
-        public const int WM_LBUTTONUP = 0x0202;
+        public const int WmLbuttonup = 0x0202;
 
         [DllImport("user32.dll",CharSet=CharSet.Auto)]
         private static extern int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
@@ -263,15 +261,15 @@ namespace Seas0nPass.Models
 
         [DllImport("user32.dll")]
         //[return: MarshalAs(UnmanagedType.Bool)]
-        static extern int SetForegroundWindow(IntPtr Hwnd);
+        static extern int SetForegroundWindow(IntPtr hwnd);
 
-        private AutomationElement GetAppleTVPanel(AutomationElement root)
+        private AutomationElement GetAppleTvPanel(AutomationElement root)
         {
             var panels = (IEnumerable<AutomationElement>)root.FindAll(TreeScope.Subtree, new PropertyCondition(AutomationElement.ClassNameProperty, "Static")).Cast<AutomationElement>();
-            return panels.Where(panel => isAppleTVPanel(panel)).FirstOrDefault();
+            return panels.Where(panel => IsAppleTvPanel(panel)).FirstOrDefault();
         }
 
-        private bool isAppleTVPanel(AutomationElement panel)
+        private bool IsAppleTvPanel(AutomationElement panel)
         {
             return panel.FindFirst(TreeScope.Children,
                 new PropertyCondition(AutomationElement.NameProperty, "Apple TV")) != null;
@@ -284,7 +282,7 @@ namespace Seas0nPass.Models
                 return processes[0];
             var iTunesPath = GetITunesPath();
 
-            LogUtil.LogEvent(string.Format("Starting iTunes at path {0}", iTunesPath));
+            LogUtil.LogEvent($"Starting iTunes at path {iTunesPath}");
 
             return Process.Start(iTunesPath);
         }
@@ -294,13 +292,13 @@ namespace Seas0nPass.Models
             var controlHandle = control == null ? "(null)" :
                 "Handle: " + control.Current.NativeWindowHandle.ToString("X");
 
-            LogUtil.LogEvent(string.Format("Control named \"{0}\" found! Handle: {1}", controlName, controlHandle));
+            LogUtil.LogEvent($"Control named \"{controlName}\" found! Handle: {controlHandle}");
 
         }
 
         private string GetITunesPath()
         {
-            return ITunesInfoProvider.GetITunesExePath();
+            return TunesInfoProvider.GetITunesExePath();
         }
     }
 }

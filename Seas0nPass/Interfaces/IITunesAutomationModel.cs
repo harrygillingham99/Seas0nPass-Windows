@@ -10,7 +10,7 @@ namespace Seas0nPass.Interfaces
     {
         SynchronizationContext SyncContext { get; set; }
         IFirmwareVersionModel FirmwareVersionModel { get; set; }
-        IITunesInfoProvider ITunesInfoProvider { get; set; }
+        IITunesInfoProvider TunesInfoProvider { get; set; }
         void Run();
     }
 }

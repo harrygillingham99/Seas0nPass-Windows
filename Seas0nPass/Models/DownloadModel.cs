@@ -7,25 +7,20 @@
 //
 ////
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Seas0nPass.Interfaces;
 using System.Net;
-using System.Configuration;
 using System.IO;
 using System.Threading;
 using System.ComponentModel;
-using System.Diagnostics;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models
 {
     public class DownloadModel : IDownloadModel
     {
-        private readonly string fileName = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.DOWNLOADED_FILE_PATH);
-        private readonly WebClient webClient;
-        private IFirmwareVersionModel firmwareVersionModel;
+        private readonly string _fileName = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.DOWNLOADED_FILE_PATH);
+        private readonly WebClient _webClient;
+        private IFirmwareVersionModel _firmwareVersionModel;
 
         public event EventHandler ProgressChanged;
         public event EventHandler DownloadCompleted;
@@ -36,19 +31,19 @@ namespace Seas0nPass.Models
 
         public DownloadModel()
         {
-            webClient = new WebClient();
-            webClient.DownloadProgressChanged += webClient_DownloadProgressChanged;
-            webClient.DownloadFileCompleted += webClient_DownloadFileCompleted;
+            _webClient = new WebClient();
+            _webClient.DownloadProgressChanged += webClient_DownloadProgressChanged;
+            _webClient.DownloadFileCompleted += webClient_DownloadFileCompleted;
         }
 
         private void PerformStart()
         {            
-            if (SafeFile.Exists(firmwareVersionModel.ExistingFirmwarePath) &&
-                MiscUtils.ComputeMD5(firmwareVersionModel.ExistingFirmwarePath) == firmwareVersionModel.CorrectFirmwareMD5)
+            if (SafeFile.Exists(_firmwareVersionModel.ExistingFirmwarePath) &&
+                MiscUtils.ComputeMd5(_firmwareVersionModel.ExistingFirmwarePath) == _firmwareVersionModel.CorrectFirmwareMd5)
             {
                 LogUtil.LogEvent("Original firmware found on disk");
 
-                SafeFile.Copy(firmwareVersionModel.ExistingFirmwarePath, Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.DOWNLOADED_FILE_PATH), true);
+                SafeFile.Copy(_firmwareVersionModel.ExistingFirmwarePath, Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.DOWNLOADED_FILE_PATH), true);
                 if (DownloadCompleted != null)
                     DownloadCompleted(this, EventArgs.Empty);
                 return;
@@ -56,7 +51,7 @@ namespace Seas0nPass.Models
 
             LogUtil.LogEvent("Starting download");
 
-            webClient.DownloadFileAsync(new Uri(firmwareVersionModel.DownloadUri), fileName);
+            _webClient.DownloadFileAsync(new Uri(_firmwareVersionModel.DownloadUri), _fileName);
         }
 
         public void StartDownload()
@@ -93,7 +88,7 @@ namespace Seas0nPass.Models
 
             LogUtil.LogEvent("Download completed");
 
-            SafeFile.Copy(Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.DOWNLOADED_FILE_PATH), firmwareVersionModel.ExistingFirmwarePath, true);
+            SafeFile.Copy(Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.DOWNLOADED_FILE_PATH), _firmwareVersionModel.ExistingFirmwarePath, true);
 
             LogUtil.LogEvent("Downloaded file copied to Documents folder");
 
@@ -113,22 +108,22 @@ namespace Seas0nPass.Models
 
         public void CancelDownload()
         {
-            if (!webClient.IsBusy) // already canceled or used ExistingFirmwarePath
+            if (!_webClient.IsBusy) // already canceled or used ExistingFirmwarePath
                 return;
 
             LogUtil.LogEvent("Cancelling download");
-            webClient.CancelAsync();
-            while (webClient.IsBusy)
+            _webClient.CancelAsync();
+            while (_webClient.IsBusy)
             {
                 Thread.Sleep(50);
             }
-            if (SafeFile.Exists(fileName))
-                SafeFile.Delete(fileName);
+            if (SafeFile.Exists(_fileName))
+                SafeFile.Delete(_fileName);
         }
 
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this.firmwareVersionModel = firmwareVersionModel;
+            this._firmwareVersionModel = firmwareVersionModel;
         }
     }
 }

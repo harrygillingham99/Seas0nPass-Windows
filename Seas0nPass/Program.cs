@@ -7,8 +7,6 @@
 //
 ////
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using Seas0nPass.Presenters;
 using System.Diagnostics;
@@ -35,14 +33,14 @@ namespace Seas0nPass
 
             LogUtil.Init();
             LogUtil.LogEvent("Application start");
-            LogUtil.LogEvent(string.Format("{0} {1}", Application.ProductName, Application.ProductVersion));
+            LogUtil.LogEvent($"{Application.ProductName} {Application.ProductVersion}");
             
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var form = new MainForm();
-            mainPresenter = new MainPresenter(form);
-            if (mainPresenter.Init())
+            _mainPresenter = new MainPresenter(form);
+            if (_mainPresenter.Init())
             {
                 Application.Run(form);
             }
@@ -55,10 +53,10 @@ namespace Seas0nPass
             if (ex != null)
                 LogUtil.LogException(ex);
 
-            mainPresenter.HandleCrash();
+            _mainPresenter.HandleCrash();
         }
 
-        private static MainPresenter mainPresenter;
+        private static MainPresenter _mainPresenter;
 
         static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {

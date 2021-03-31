@@ -8,40 +8,37 @@
 ////
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Seas0nPass.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Globalization;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models
 {
-    public class DFUModel : IDFUModel
+    public class DfuModel : IDfuModel
     {
         public event EventHandler ProcessFinished;
         public event EventHandler CurrentMessageChanged;
         public event EventHandler ProgressChanged;
 
-        private string currentMessage;
+        private string _currentMessage;
         public string CurrentMessage
         {
-            get { return currentMessage; }
+            get { return _currentMessage; }
         }
 
-        private int progressPercentage;
+        private int _progressPercentage;
         public int ProgressPercentage
         {
-            get { return progressPercentage; }
+            get { return _progressPercentage; }
         }
 
-        private IFirmwareVersionModel firmwareVersionModel;
+        private IFirmwareVersionModel _firmwareVersionModel;
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this.firmwareVersionModel = firmwareVersionModel;
+            this._firmwareVersionModel = firmwareVersionModel;
         }
 
         public void StartProcess()
@@ -61,25 +58,25 @@ namespace Seas0nPass.Models
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            RunDFU();
+            RunDfu();
         }
 
-        private void RestoreDFUFile()
+        private void RestoreDfuFile()
         {
             LogUtil.LogEvent("Restoring DFU file");
 
-            string iBSS = Path.Combine(firmwareVersionModel.AppDataFolder, MiscUtils.IBSS_FILE_NAME);
-            if (SafeFile.Exists(iBSS))
-                SafeFile.Copy(iBSS, Path.Combine(MiscUtils.BIN_DIRECTORY, MiscUtils.IBSS_FILE_NAME), true);
+            string iBss = Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.IBSS_FILE_NAME);
+            if (SafeFile.Exists(iBss))
+                SafeFile.Copy(iBss, Path.Combine(MiscUtils.BIN_DIRECTORY, MiscUtils.IBSS_FILE_NAME), true);
 
-            string iBEC = Path.Combine(firmwareVersionModel.AppDataFolder, MiscUtils.IBEC_FILE_NAME);
-            if (SafeFile.Exists(iBEC))
-                SafeFile.Copy(iBEC, Path.Combine(MiscUtils.BIN_DIRECTORY, MiscUtils.IBEC_FILE_NAME), true);
+            string iBec = Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.IBEC_FILE_NAME);
+            if (SafeFile.Exists(iBec))
+                SafeFile.Copy(iBec, Path.Combine(MiscUtils.BIN_DIRECTORY, MiscUtils.IBEC_FILE_NAME), true);
         }
 
-        private void RunDFU()
+        private void RunDfu()
         {
-            RestoreDFUFile();
+            RestoreDfuFile();
 
             SafeDirectory.SetCurrentDirectory(MiscUtils.BIN_DIRECTORY);
 
@@ -91,10 +88,10 @@ namespace Seas0nPass.Models
             string arguments = string.Join(" ", files);
 
             LogUtil.LogEvent(string.Format("DFU process starting for {0}", arguments));
-            RunDFUProcess(arguments);
+            RunDfuProcess(arguments);
         }
 
-        private void RunDFUProcess(string arguments)
+        private void RunDfuProcess(string arguments)
         {
             var p = WinProcessUtil.StartNewProcess();
             p.StartInfo.FileName = @"dfu.exe";
@@ -129,7 +126,7 @@ namespace Seas0nPass.Models
 
             if (data.StartsWith("::"))
             {
-                currentMessage = data.Substring(2);
+                _currentMessage = data.Substring(2);
                 if (CurrentMessageChanged != null)
                     CurrentMessageChanged(this, EventArgs.Empty);
             }
@@ -138,7 +135,7 @@ namespace Seas0nPass.Models
             {
                 var percentString = data.Substring(3, data.Length - 4);
                 var info = new CultureInfo("en-US");
-                progressPercentage = Convert.ToInt32(double.Parse(percentString, info), info);
+                _progressPercentage = Convert.ToInt32(double.Parse(percentString, info), info);
 
                 if (ProgressChanged != null)
                     ProgressChanged(this, EventArgs.Empty);

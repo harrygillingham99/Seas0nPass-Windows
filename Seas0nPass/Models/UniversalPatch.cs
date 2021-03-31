@@ -19,7 +19,7 @@ namespace Seas0nPass.Models
 {
     public class UniversalPatch : IPatch
     {
-        private static readonly Regex _regex = new Regex(@"(?<match>[^\s""]+)|\""(?<match>[^""]*)""");
+        private static readonly Regex Regex = new Regex(@"(?<match>[^\s""]+)|\""(?<match>[^""]*)""");
 
         private IDictionary<string, IPatchCommand> _patchCommands;
         private readonly string _commandsText;
@@ -130,7 +130,7 @@ namespace Seas0nPass.Models
 
         private static void ParseCommand(string command, out string[] args, out string name)
         {
-            args = _regex.Matches(command).Cast<Match>().Select(x => x.Groups["match"].Value).ToArray();
+            args = Regex.Matches(command).Cast<Match>().Select(x => x.Groups["match"].Value).ToArray();
             name = args[0];
             args = args.Skip(1).ToArray();
         }

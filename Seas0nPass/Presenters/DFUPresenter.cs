@@ -14,18 +14,18 @@ using Seas0nPass.Interfaces;
 
 namespace Seas0nPass.Presenters
 {
-    public class DFUPresenter
+    public class DfuPresenter
     {
 
-        private IDFUModel model;
-        private IDFUView view;
+        private IDfuModel _model;
+        private IDfuView _view;
 
         public event EventHandler ProcessFinished;
 
-        public DFUPresenter(IDFUModel model, IDFUView view )
+        public DfuPresenter(IDfuModel model, IDfuView view )
         {
-            this.model = model;
-            this.view = view;
+            this._model = model;
+            this._view = view;
             model.CurrentMessageChanged += new EventHandler(model_CurrentMessageChanged);
             model.ProgressChanged += new EventHandler(model_ProgressChanged);
             model.ProcessFinished += new EventHandler(model_ProcessFinished);
@@ -33,7 +33,7 @@ namespace Seas0nPass.Presenters
 
         void model_ProgressChanged(object sender, EventArgs e)
         {
-            view.UpdateProgress(model.ProgressPercentage);
+            _view.UpdateProgress(_model.ProgressPercentage);
         }
 
         void model_ProcessFinished(object sender, EventArgs e)
@@ -41,20 +41,20 @@ namespace Seas0nPass.Presenters
             if (ProcessFinished != null)
                 ProcessFinished(sender, e);
 
-            view.Clear();
+            _view.Clear();
         }
 
         void model_CurrentMessageChanged(object sender, EventArgs e)
         {
-            if (model.CurrentMessage == "Found device in DFU mode...")            
-                view.HintVisibility = false;            
-            view.SetMessageText(model.CurrentMessage);
+            if (_model.CurrentMessage == "Found device in DFU mode...")            
+                _view.HintVisibility = false;            
+            _view.SetMessageText(_model.CurrentMessage);
         }
 
         public void StartProcess()
         {
-            view.HintVisibility = true;            
-            model.StartProcess();
+            _view.HintVisibility = true;            
+            _model.StartProcess();
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Seas0nPass.Interfaces
 {
-    public interface IDFUModel
+    public interface IDfuModel
     {
         void StartProcess();
         event EventHandler ProcessFinished;

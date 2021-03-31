@@ -16,12 +16,12 @@ namespace Seas0nPass.Presenters
 {
     public class PatchPresenter
     {
-        private IPatchView view;
-        private IPatchModel model;
+        private IPatchView _view;
+        private IPatchModel _model;
         public PatchPresenter(IPatchView view, IPatchModel model)
         {
-            this.view = view;
-            this.model = model;            
+            this._view = view;
+            this._model = model;            
             model.ProgressUpdated += new EventHandler(model_ProgressUpdated);
             model.CurrentMessageChanged += new EventHandler(model_CurrentMessageChanged);
             model.Finished += new EventHandler(model_Finished);
@@ -30,7 +30,7 @@ namespace Seas0nPass.Presenters
 
         void model_CurrentMessageChanged(object sender, EventArgs e)
         {
-            view.SetMessageText(model.CurrentMessage);
+            _view.SetMessageText(_model.CurrentMessage);
         }
 
         void model_Finished(object sender, EventArgs e)
@@ -41,15 +41,15 @@ namespace Seas0nPass.Presenters
 
         void model_ProgressUpdated(object sender, EventArgs e)
         {
-            view.UpdateProgress(model.CurrentProgress);
+            _view.UpdateProgress(_model.CurrentProgress);
         }
 
         public event EventHandler Finished;
 
         public void StartPatch()
         {            
-            view.SetActionButtonText("Cancel");
-            model.StartProcess();
+            _view.SetActionButtonText("Cancel");
+            _model.StartProcess();
         }
     }
 }

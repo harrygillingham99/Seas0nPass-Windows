@@ -7,9 +7,6 @@
 //
 ////
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Seas0nPass.Interfaces;
 using System.IO;
 
@@ -24,28 +21,28 @@ namespace Seas0nPass.Presenters
             Failed
         }
 
-        private ProcessResult result = ProcessResult.Completed;
+        private ProcessResult _result = ProcessResult.Completed;
         public ProcessResult Result
         {
-            get { return result; }
+            get { return _result; }
         }
 
-        private IDownloadModel model;
-        private IDownloadView view;
+        private IDownloadModel _model;
+        private IDownloadView _view;
 
         public event EventHandler ProcessFinished;
 
-        private IFirmwareVersionModel firmwareVersionModel;
+        private IFirmwareVersionModel _firmwareVersionModel;
 
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this.firmwareVersionModel = firmwareVersionModel;
+            this._firmwareVersionModel = firmwareVersionModel;
         }
 
         public DownloadPresenter(IDownloadModel model, IDownloadView view)
         {
-            this.model = model;
-            this.view = view;
+            this._model = model;
+            this._view = view;
 
             model.ProgressChanged += model_ProgressChanged;
             view.ActionButtonClicked += view_ActionButtonClicked;
@@ -56,40 +53,40 @@ namespace Seas0nPass.Presenters
 
         private void model_DownloadFailed(object sender, EventArgs e)
         {
-            result = ProcessResult.Failed;
+            _result = ProcessResult.Failed;
             if (ProcessFinished != null)
                 ProcessFinished(sender, e);
         }
 
         private void model_DownloadFinished(object sender, EventArgs e)
         {
-            result = ProcessResult.Completed;
+            _result = ProcessResult.Completed;
             if (ProcessFinished != null)
                 ProcessFinished(sender, e);
         }
 
         private void model_DownloadCanceled(object sender, EventArgs e)
         {
-            result = ProcessResult.Cancelled;
+            _result = ProcessResult.Cancelled;
             if (ProcessFinished != null)
                 ProcessFinished(sender, e);
         }
 
         public void StartProcess()
         {
-            view.SetMessageText(string.Format("Downloading {0}...",  Path.GetFileName(firmwareVersionModel.ExistingFirmwarePath)));
-            view.SetActionButtonText("Cancel");
-            model.StartDownload();
+            _view.SetMessageText($"Downloading {Path.GetFileName(_firmwareVersionModel.ExistingFirmwarePath)}...");
+            _view.SetActionButtonText("Cancel");
+            _model.StartDownload();
         }
 
         private void view_ActionButtonClicked(object sender, EventArgs e)
         {
-            model.CancelDownload();
+            _model.CancelDownload();
         }
 
         private void model_ProgressChanged(object sender, EventArgs e)
         {
-            view.UpdateProgress(model.Percentage);
+            _view.UpdateProgress(_model.Percentage);
         }
     }
 }

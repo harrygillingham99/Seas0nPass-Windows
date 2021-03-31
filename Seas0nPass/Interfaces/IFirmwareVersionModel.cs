@@ -13,7 +13,7 @@ namespace Seas0nPass.Interfaces
         string ExistingFirmwarePath { get; set; }
         string AppDataFolder { get; }
         string PatchedFirmwarePath { get; }
-        string CorrectFirmwareMD5 { get; }
+        string CorrectFirmwareMd5 { get; }
         string DownloadUri { get; }
         List<FirmwareVersion> KnownVersions { get; set; }
         FirmwareVersion SelectedVersion { get; set; }

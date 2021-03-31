@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
-using Seas0nPass.Properties;
 using System.Security.Cryptography;
 using System.ComponentModel;
 
@@ -46,7 +45,7 @@ namespace Seas0nPass.Utils
             DOCUMENTS_HOME = Path.Combine(myDocumentsPath, "Seas0nPass");
         }
 
-        public static string ComputeMD5(string filePath)
+        public static string ComputeMd5(string filePath)
         {
             var sb = new StringBuilder();
             byte[] hash;
@@ -96,24 +95,24 @@ namespace Seas0nPass.Utils
             SafeDirectory.CreateDirectory(dirPath);
         }
 
-        public static void CopyDirectory(string Src, string Dst)
+        public static void CopyDirectory(string src, string dst)
         {
-            String[] Files;
+            String[] files;
 
-            if (Dst[Dst.Length - 1] != Path.DirectorySeparatorChar)
-                Dst += Path.DirectorySeparatorChar;
-            if (!SafeDirectory.Exists(Dst)) SafeDirectory.CreateDirectory(Dst);
-            Files = SafeDirectory.GetFileSystemEntries(Src);
-            foreach (string Element in Files)
+            if (dst[dst.Length - 1] != Path.DirectorySeparatorChar)
+                dst += Path.DirectorySeparatorChar;
+            if (!SafeDirectory.Exists(dst)) SafeDirectory.CreateDirectory(dst);
+            files = SafeDirectory.GetFileSystemEntries(src);
+            foreach (string element in files)
             {
                 // Sub directories
 
-                if (SafeDirectory.Exists(Element))
-                    CopyDirectory(Element, Dst + Path.GetFileName(Element));
+                if (SafeDirectory.Exists(element))
+                    CopyDirectory(element, dst + Path.GetFileName(element));
                 // Files in directory
 
                 else
-                    SafeFile.Copy(Element, Dst + Path.GetFileName(Element), true);
+                    SafeFile.Copy(element, dst + Path.GetFileName(element), true);
             }
         }
 

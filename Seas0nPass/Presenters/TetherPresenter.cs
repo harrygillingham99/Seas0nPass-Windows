@@ -16,12 +16,12 @@ namespace Seas0nPass.Presenters
 {
     public class TetherPresenter
     {
-        private ITetherModel model;
-        private ITetherView view;
+        private ITetherModel _model;
+        private ITetherView _view;
         public TetherPresenter(ITetherModel model, ITetherView view)
         {
-            this.model = model;
-            this.view = view;
+            this._model = model;
+            this._view = view;
             model.CurrentMessageChanged += new EventHandler(model_CurrentMessageChanged);
             model.ProgressChanged += new EventHandler(model_ProgressChanged);
             model.ProcessFinished += new EventHandler(model_ProcessFinished);
@@ -29,12 +29,12 @@ namespace Seas0nPass.Presenters
 
         void model_ProgressChanged(object sender, EventArgs e)
         {
-            view.UpdateProgress(model.ProgressPercentage);
+            _view.UpdateProgress(_model.ProgressPercentage);
         }
 
         void model_CurrentMessageChanged(object sender, EventArgs e)
         {
-            view.SetMessageText(model.CurrentMessage);
+            _view.SetMessageText(_model.CurrentMessage);
         }
 
         void model_ProcessFinished(object sender, EventArgs e)
@@ -42,14 +42,14 @@ namespace Seas0nPass.Presenters
             if (ProcessFinished != null)
                 ProcessFinished(sender, e);
 
-            view.Clear();
+            _view.Clear();
         }
 
         public event EventHandler ProcessFinished;
 
         public void StartProcess()
         {
-            model.StartProcess();
+            _model.StartProcess();
         }
     }
 }

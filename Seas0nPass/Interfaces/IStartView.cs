@@ -18,8 +18,8 @@ namespace Seas0nPass.Interfaces
 {
     public interface IStartView : IView
     {
-        event EventHandler<CreateIPSWClickedEventArgs> CreateIPSWClicked;
-        event EventHandler<CreateIPSWFirmwareClickedEventArgs> CreateIPSW_fwVersion_Clicked; 
+        event EventHandler<CreateIpswClickedEventArgs> CreateIpswClicked;
+        event EventHandler<CreateIpswFirmwareClickedEventArgs> CreateIpswFwVersionClicked; 
         event EventHandler TetherClicked;
 
         SynchronizationContext SyncContext { get; }

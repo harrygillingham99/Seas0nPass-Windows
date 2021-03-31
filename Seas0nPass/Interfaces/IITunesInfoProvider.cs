@@ -15,7 +15,7 @@ namespace Seas0nPass.Interfaces
 {
     public interface IITunesInfoProvider
     {
-        ITunesInfo CheckITunesVersion();
+        TunesInfo CheckITunesVersion();
         string GetITunesExePath();
     }
 }

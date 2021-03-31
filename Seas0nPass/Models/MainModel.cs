@@ -21,15 +21,15 @@ namespace Seas0nPass.Models
     {
         public bool IsTetherPossible()
         {
-            return SafeFile.Exists(Path.Combine(firmwareVersionModel.AppDataFolder, MiscUtils.KERNEL_CACHE_FILE_NAME)) &&
-                   SafeFile.Exists(Path.Combine(firmwareVersionModel.AppDataFolder, MiscUtils.IBSS_FILE_NAME));
+            return SafeFile.Exists(Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.KERNEL_CACHE_FILE_NAME)) &&
+                   SafeFile.Exists(Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.IBSS_FILE_NAME));
         }
 
-        private IFirmwareVersionModel firmwareVersionModel;
+        private IFirmwareVersionModel _firmwareVersionModel;
 
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this.firmwareVersionModel = firmwareVersionModel;           
+            this._firmwareVersionModel = firmwareVersionModel;           
         }
 
         public IEnumerable<string> GetProgramsToWarnNames()

@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Seas0nPass.Interfaces
 {
-    public interface IDFUSuccessControl : IView
+    public interface IDfuSuccessControl : IView
     {
         event EventHandler ButtonClicked;       
     }

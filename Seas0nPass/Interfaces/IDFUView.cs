@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Seas0nPass.Interfaces
 {
-    public interface IDFUView : IView
+    public interface IDfuView : IView
     {
         bool HintVisibility { get; set; }
         void UpdateProgress(int value);

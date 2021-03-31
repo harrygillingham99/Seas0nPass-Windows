@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Seas0nPass.Interfaces
 {
-    public class ITunesInfo
+    public class TunesInfo
     {
         public string RequiredVersion { get; set; }
         public string InstalledVersion { get; set; }

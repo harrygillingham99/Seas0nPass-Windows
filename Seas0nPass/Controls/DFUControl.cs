@@ -18,15 +18,15 @@ using Seas0nPass.Interfaces;
 
 namespace Seas0nPass
 {
-    public partial class DFUControl : UserControl, IDFUView
+    public partial class DfuControl : UserControl, IDfuView
     {
-        private readonly Image dfuImage;
-        private readonly Image iTVimage;
-        public DFUControl()
+        private readonly Image _dfuImage;
+        private readonly Image _iTVimage;
+        public DfuControl()
         {
             InitializeComponent();
-            dfuImage = pictureBox1.BackgroundImage;
-            iTVimage = pictureBox1.Image;
+            _dfuImage = pictureBox1.BackgroundImage;
+            _iTVimage = pictureBox1.Image;
             pictureBox1.Image = null;
         }
 
@@ -76,7 +76,7 @@ namespace Seas0nPass
                 Action impl = () =>
                 {
                     hintLabel.Visible = value;
-                    pictureBox1.BackgroundImage = value ? dfuImage : iTVimage;
+                    pictureBox1.BackgroundImage = value ? _dfuImage : _iTVimage;
                 };
                 if (InvokeRequired)
                     Invoke(impl);

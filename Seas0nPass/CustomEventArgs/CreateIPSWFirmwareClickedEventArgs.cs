@@ -7,18 +7,15 @@
 //
 ////
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Seas0nPass.Models;
 
 namespace Seas0nPass.CustomEventArgs
 {
-    public class CreateIPSWFirmwareClickedEventArgs : EventArgs
+    public class CreateIpswFirmwareClickedEventArgs : EventArgs
     {
         public FirmwareVersion FirmwareVersion { get; private set; }
 
-        public CreateIPSWFirmwareClickedEventArgs(FirmwareVersion firmwareVersion)
+        public CreateIpswFirmwareClickedEventArgs(FirmwareVersion firmwareVersion)
         {
             FirmwareVersion = firmwareVersion;
         }

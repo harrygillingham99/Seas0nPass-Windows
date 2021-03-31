@@ -9,25 +9,25 @@ namespace Seas0nPass.Utils
 {
     public static class WinProcessUtil
     {
-        private static List<Process> startedProcesses = new List<Process>();
+        private static List<Process> _startedProcesses = new List<Process>();
 
         public static Process StartNewProcess()
         {
             var p = new Process();
-            startedProcesses.Add(p);
+            _startedProcesses.Add(p);
             return p;
         }
 
         public static Process StartNewProcess(ProcessStartInfo processStartInfo)
         {
             var p = Process.Start(processStartInfo);
-            startedProcesses.Add(p);
+            _startedProcesses.Add(p);
             return p;
         }
 
         public static void KillAllProcesses()
         {
-            foreach (var p in startedProcesses.Where(x => !x.HasExited))
+            foreach (var p in _startedProcesses.Where(x => !x.HasExited))
             {
                 try
                 {

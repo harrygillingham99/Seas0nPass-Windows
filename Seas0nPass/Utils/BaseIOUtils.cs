@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Seas0nPass.Utils
 {
-    public static class BaseIOUtils
+    public static class BaseIoUtils
     {
         public static void RepeatActionWithDelay(Action action)
         {

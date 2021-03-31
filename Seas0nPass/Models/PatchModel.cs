@@ -7,13 +7,8 @@
 //
 ////
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Seas0nPass.Interfaces;
-using System.Threading;
 using System.IO;
-using System.Diagnostics;
 using System.ComponentModel;
 using Seas0nPass.Utils;
 
@@ -21,10 +16,10 @@ namespace Seas0nPass.Models
 {
     public class PatchModel : IPatchModel
     {
-        private IPatch patch;
-        private IFirmwareVersionModel firmwareVersionModel;
-        private int currentProgress;
-        private string currentMessage;
+        private IPatch _patch;
+        private IFirmwareVersionModel _firmwareVersionModel;
+        private int _currentProgress;
+        private string _currentMessage;
 
         public event EventHandler CurrentMessageChanged;
         public event EventHandler ProgressUpdated;
@@ -32,17 +27,17 @@ namespace Seas0nPass.Models
 
         public int CurrentProgress
         {
-            get { return currentProgress; }
+            get { return _currentProgress; }
         }
 
         public string CurrentMessage
         {
-            get { return currentMessage; }
+            get { return _currentMessage; }
         }
 
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this.firmwareVersionModel = firmwareVersionModel;
+            this._firmwareVersionModel = firmwareVersionModel;
         }
 
         public void StartProcess()
@@ -65,7 +60,7 @@ namespace Seas0nPass.Models
 
         private void UpdateProgress(int value)
         {
-            currentProgress = value;
+            _currentProgress = value;
             if (ProgressUpdated != null)
                 ProgressUpdated(this, EventArgs.Empty);
         }
@@ -74,45 +69,45 @@ namespace Seas0nPass.Models
         {
             LogUtil.LogEvent(string.Format("Patching message changed to: {0}", message));
 
-            currentMessage = message;
+            _currentMessage = message;
             if (CurrentMessageChanged != null)
                 CurrentMessageChanged(this, EventArgs.Empty);
         }
 
-        private void SaveDFUAndTetherFiles()
+        private void SaveDfuAndTetherFiles()
         {
             LogUtil.LogEvent(string.Format("Saving {0} and {1} files", MiscUtils.KERNEL_CACHE_FILE_NAME, MiscUtils.IBSS_FILE_NAME));
 
-            MiscUtils.RecreateDirectory(firmwareVersionModel.AppDataFolder);
+            MiscUtils.RecreateDirectory(_firmwareVersionModel.AppDataFolder);
 
-            LogUtil.LogEvent(string.Format("Directory {0} recreated successfully", firmwareVersionModel.AppDataFolder));
+            LogUtil.LogEvent(string.Format("Directory {0} recreated successfully", _firmwareVersionModel.AppDataFolder));
 
             string kernelcache = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.KERNEL_CACHE_FILE_NAME);
             if (SafeFile.Exists(kernelcache))
             {
-                SafeFile.Copy(kernelcache, Path.Combine(firmwareVersionModel.AppDataFolder, MiscUtils.KERNEL_CACHE_FILE_NAME), true);
+                SafeFile.Copy(kernelcache, Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.KERNEL_CACHE_FILE_NAME), true);
                 LogUtil.LogEvent(string.Format("{0} file copied successfully", MiscUtils.KERNEL_CACHE_FILE_NAME));
             }
 
-            string iBSS = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.FIRMWARE_FOLDER_NAME, MiscUtils.DFU_FOLDER_NAME, MiscUtils.IBSS_FILE_NAME);
-            if (SafeFile.Exists(iBSS))
+            string iBss = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.FIRMWARE_FOLDER_NAME, MiscUtils.DFU_FOLDER_NAME, MiscUtils.IBSS_FILE_NAME);
+            if (SafeFile.Exists(iBss))
             {
-                SafeFile.Copy(iBSS, Path.Combine(firmwareVersionModel.AppDataFolder, MiscUtils.IBSS_FILE_NAME), true);
+                SafeFile.Copy(iBss, Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.IBSS_FILE_NAME), true);
                 LogUtil.LogEvent(string.Format("{0} file copied successfully", MiscUtils.IBSS_FILE_NAME));
             }
 
-            string iBEC = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.FIRMWARE_FOLDER_NAME, MiscUtils.DFU_FOLDER_NAME, MiscUtils.IBEC_FILE_NAME);
-            if (firmwareVersionModel.SelectedVersion.Save_iBEC && SafeFile.Exists(iBEC))
+            string iBec = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.FIRMWARE_FOLDER_NAME, MiscUtils.DFU_FOLDER_NAME, MiscUtils.IBEC_FILE_NAME);
+            if (_firmwareVersionModel.SelectedVersion.SaveIBec && SafeFile.Exists(iBec))
             {
-                SafeFile.Copy(iBEC, Path.Combine(firmwareVersionModel.AppDataFolder, MiscUtils.IBEC_FILE_NAME), true);
+                SafeFile.Copy(iBec, Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.IBEC_FILE_NAME), true);
                 LogUtil.LogEvent(string.Format("{0} file copied successfully", MiscUtils.IBEC_FILE_NAME));
             }
         }
 
         private IPatch GetPatch()
         {
-            if (firmwareVersionModel.SelectedVersion != null)
-                return new UniversalPatch(firmwareVersionModel.SelectedVersion.CommandsText);
+            if (_firmwareVersionModel.SelectedVersion != null)
+                return new UniversalPatch(_firmwareVersionModel.SelectedVersion.CommandsText);
             throw new InvalidOperationException("Unknown firmware version");
         }
 
@@ -120,20 +115,20 @@ namespace Seas0nPass.Models
 
         private void PerformPatch()
         {
-            patch = GetPatch();
+            _patch = GetPatch();
 
-            patch.CurrentMessageChanged += patch_CurrentMessageChanged;
-            patch.CurrentProgressChanged += patch_CurrentProgressChanged;
+            _patch.CurrentMessageChanged += patch_CurrentMessageChanged;
+            _patch.CurrentProgressChanged += patch_CurrentProgressChanged;
 
-            string resultFile = patch.PerformPatch();
+            string resultFile = _patch.PerformPatch();
 
-            patch.CurrentMessageChanged -= patch_CurrentMessageChanged;
-            patch.CurrentProgressChanged -= patch_CurrentProgressChanged;
-            patch = null;
+            _patch.CurrentMessageChanged -= patch_CurrentMessageChanged;
+            _patch.CurrentProgressChanged -= patch_CurrentProgressChanged;
+            _patch = null;
 
-            SaveDFUAndTetherFiles();
+            SaveDfuAndTetherFiles();
 
-            SafeFile.Copy(resultFile, firmwareVersionModel.PatchedFirmwarePath, true);           
+            SafeFile.Copy(resultFile, _firmwareVersionModel.PatchedFirmwarePath, true);           
 
             if (Finished != null)
                 Finished(this, EventArgs.Empty);
@@ -141,12 +136,12 @@ namespace Seas0nPass.Models
 
         private void patch_CurrentMessageChanged(object sender, EventArgs args)
         {
-            UpdateCurrentMessage(patch.CurrentMessage);
+            UpdateCurrentMessage(_patch.CurrentMessage);
         }
 
         private void patch_CurrentProgressChanged(object sender, EventArgs args)
         {
-            UpdateProgress(patch.CurrentProgress);
+            UpdateProgress(_patch.CurrentProgress);
         }
     }
 }

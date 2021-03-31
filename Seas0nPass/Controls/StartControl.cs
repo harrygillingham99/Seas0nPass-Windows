@@ -24,27 +24,27 @@ namespace Seas0nPass.Controls
 {
     public partial class StartControl : UserControl, IStartView
     {
-        private readonly Image tetherEnabledImage;
-        private readonly Image tetherDisabledImage;
-        private readonly Image tetherNotRequiredImage;
+        private readonly Image _tetherEnabledImage;
+        private readonly Image _tetherDisabledImage;
+        private readonly Image _tetherNotRequiredImage;
 
         public StartControl()
         {
             InitializeComponent();
-            tetherNotRequiredImage = tetheredPictureBox.BackgroundImage;
-            tetherDisabledImage = tetheredPictureBox.InitialImage;
-            tetherEnabledImage = tetheredPictureBox.ErrorImage;
+            _tetherNotRequiredImage = tetheredPictureBox.BackgroundImage;
+            _tetherDisabledImage = tetheredPictureBox.InitialImage;
+            _tetherEnabledImage = tetheredPictureBox.ErrorImage;
 
         }
 
-        public event EventHandler<CreateIPSWFirmwareClickedEventArgs> CreateIPSW_fwVersion_Clicked;
-        public event EventHandler<CreateIPSWClickedEventArgs> CreateIPSWClicked;
+        public event EventHandler<CreateIpswFirmwareClickedEventArgs> CreateIpswFwVersionClicked;
+        public event EventHandler<CreateIpswClickedEventArgs> CreateIpswClicked;
         public event EventHandler TetherClicked;
 
         public void SetTetherEnabledState(bool isEnabled)
         {
             tetheredPictureBox.Enabled = tetherLabel.Enabled = isEnabled;
-            tetheredPictureBox.BackgroundImage = isEnabled ? tetherEnabledImage : tetherDisabledImage;
+            tetheredPictureBox.BackgroundImage = isEnabled ? _tetherEnabledImage : _tetherDisabledImage;
         }
 
         private void ipswPictureBox_Click(object sender, EventArgs e)
@@ -60,8 +60,8 @@ namespace Seas0nPass.Controls
                     return;
             }
 
-            if (CreateIPSWClicked != null)
-                CreateIPSWClicked(sender, new CreateIPSWClickedEventArgs(fileName));
+            if (CreateIpswClicked != null)
+                CreateIpswClicked(sender, new CreateIpswClickedEventArgs(fileName));
         }
 
         private void tetheredPoctureBox_Click(object sender, EventArgs e)
@@ -72,21 +72,21 @@ namespace Seas0nPass.Controls
 
         public void DisableTether()
         {
-            tetheredPictureBox.BackgroundImage = tetherDisabledImage;
+            tetheredPictureBox.BackgroundImage = _tetherDisabledImage;
             tetheredPictureBox.Enabled = false;
             tetherLabel.Enabled = false;
         }
 
         public void EnableTether()
         {
-            tetheredPictureBox.BackgroundImage = tetherEnabledImage;
+            tetheredPictureBox.BackgroundImage = _tetherEnabledImage;
             tetheredPictureBox.Enabled = true;
             tetherLabel.Enabled = true;
         }
 
         public void SetTetherNotRequiredState()
         {
-            tetheredPictureBox.BackgroundImage = tetherNotRequiredImage;
+            tetheredPictureBox.BackgroundImage = _tetherNotRequiredImage;
             tetherLabel.Enabled = true;
         }
 
@@ -107,8 +107,8 @@ namespace Seas0nPass.Controls
         private void ipswPictureBoxFirmware_Click(object sender, EventArgs e)
         {
             var fwVersion = (FirmwareVersion)((ToolStripMenuItem)sender).Tag;
-            if (CreateIPSW_fwVersion_Clicked != null)
-                CreateIPSW_fwVersion_Clicked(this, new CreateIPSWFirmwareClickedEventArgs(fwVersion));
+            if (CreateIpswFwVersionClicked != null)
+                CreateIpswFwVersionClicked(this, new CreateIpswFirmwareClickedEventArgs(fwVersion));
         }
 
         private void SetPressedState(Control control, bool isPressed)

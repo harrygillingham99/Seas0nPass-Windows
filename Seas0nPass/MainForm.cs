@@ -8,11 +8,6 @@
 ////
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Seas0nPass.Interfaces;
 
@@ -35,14 +30,11 @@ namespace Seas0nPass
             }
             else
             {
-                string messageText = string.IsNullOrEmpty(installedITunesVersion) ?
-                    string.Format("Seas0nPass requires iTunes version {0} or later. " +
-                                    "Please install the latest iTunes version from the Apple website (www.apple.com).",
-                                    requiredITunesVersion)
-                    : string.Format("Seas0nPass requires iTunes version {0} or later. " +
-                                    "You have iTunes version {1} installed. " +
-                                    "Please open Help -> Check For Updates in iTunes to install a more recent version.",
-                                    requiredITunesVersion, installedITunesVersion);
+                string messageText = string.IsNullOrEmpty(installedITunesVersion) ? $"Seas0nPass requires iTunes version {requiredITunesVersion} or later. " +
+                                                                                    "Please install the latest iTunes version from the Apple website (www.apple.com)."
+                    : $"Seas0nPass requires iTunes version {requiredITunesVersion} or later. " +
+                      $"You have iTunes version {installedITunesVersion} installed. " +
+                      "Please open Help -> Check For Updates in iTunes to install a more recent version.";
                 MessageBox.Show(
                     owner: this,
                     text: messageText,
@@ -64,8 +56,8 @@ namespace Seas0nPass
             {
                 MessageBox.Show(
                     owner: this,
-                    text: string.Format("The firmware file {0} is either corrupt or not accessible. " +
-                        "Please check the firmware file and save it to the local disk.", filePath),
+                    text: $"The firmware file {filePath} is either corrupt or not accessible. " +
+                          "Please check the firmware file and save it to the local disk.",
                     caption: "Seas0nPass",
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Exclamation
@@ -147,7 +139,7 @@ namespace Seas0nPass
             }
             else
             {
-                MessageBox.Show(this, string.Format("The {0} firmware is untethered and does not require this process!", fwName),
+                MessageBox.Show(this, $"The {fwName} firmware is untethered and does not require this process!",
                     "Untethered Jailbreak");
             }
         }
@@ -175,15 +167,11 @@ namespace Seas0nPass
             {
                 if (programsString != "")
                     programsString += "\n";
-                programsString += String.Format("{0}. {1}", ++i,  programName);
+                programsString += $"{++i}. {programName}";
             }
             MessageBox.Show(
                 this,
-                string.Format
-                (
-                    "The program(s) listed below may prevent Seas0nPass from running correctly. Please close these program(s) before continuing.\n{0}",
-                    programsString
-                ),
+                $"The program(s) listed below may prevent Seas0nPass from running correctly. Please close these program(s) before continuing.\n{programsString}",
                 "Seas0nPass", 
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);

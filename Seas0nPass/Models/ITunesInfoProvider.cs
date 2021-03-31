@@ -7,9 +7,6 @@
 //
 ////
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Seas0nPass.Interfaces;
 using System.IO;
 using Microsoft.Win32;
@@ -18,17 +15,17 @@ using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models
 {
-    public class ITunesInfoProvider : IITunesInfoProvider
+    public class TunesInfoProvider : IITunesInfoProvider
     {
-        private static readonly Version compatibleITunesVersion = new Version("10.5");
-        public ITunesInfo CheckITunesVersion()
+        private static readonly Version CompatibleITunesVersion = new Version("10.5");
+        public TunesInfo CheckITunesVersion()
         {
             string iTunesPath = GetITunesExePath();
             if (string.IsNullOrEmpty(iTunesPath))
             {
-                return new ITunesInfo()
+                return new TunesInfo()
                     {
-                        RequiredVersion = compatibleITunesVersion.ToString(),
+                        RequiredVersion = CompatibleITunesVersion.ToString(),
                         InstalledVersion = "",
                         IsCompatible = false,
                     };
@@ -36,11 +33,11 @@ namespace Seas0nPass.Models
 
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(iTunesPath);
             var iTunesVersion = Version.Parse(fileVersionInfo.FileVersion);
-            var iTunesInfo = new ITunesInfo()
+            var iTunesInfo = new TunesInfo()
             {
-                IsCompatible = iTunesVersion >= compatibleITunesVersion,
+                IsCompatible = iTunesVersion >= CompatibleITunesVersion,
                 InstalledVersion = iTunesVersion.ToString(),
-                RequiredVersion = compatibleITunesVersion.ToString()
+                RequiredVersion = CompatibleITunesVersion.ToString()
             };
             return iTunesInfo;
         }

@@ -19,15 +19,15 @@ using Seas0nPass.Interfaces;
 
 namespace Seas0nPass.Controls
 {
-    public partial class DFUSuccessControl : UserControl, IDFUSuccessControl
+    public partial class DfuSuccessControl : UserControl, IDfuSuccessControl
     {
-        public DFUSuccessControl()
+        public DfuSuccessControl()
         {
             InitializeComponent();
-            successMessage = label1.Text;
+            _successMessage = label1.Text;
         }
 
-        private string successMessage;
+        private string _successMessage;
 
         public event EventHandler ButtonClicked;
 
