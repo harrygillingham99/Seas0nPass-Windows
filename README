@@ -1,5 +1,7 @@
 Forked from FireCore as the project has been abandonned for a while, and i'd quite like to get it working again.
 
+The plan is to remove the itunes 10.5 automation and create an 'IPSW Generator' without a dependent itunes version.
+
 /**
   * Seas0nPass
   * Copyright (C) 2015 FireCore, LLC
