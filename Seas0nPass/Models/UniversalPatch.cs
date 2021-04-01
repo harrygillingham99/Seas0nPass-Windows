@@ -6,6 +6,7 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,7 +60,7 @@ namespace Seas0nPass.Models
         private static IEnumerable<string> GetCommands(string commandsText)
         {
             IEnumerable<string> commands = commandsText
-                .Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
                 .Where(x => !string.IsNullOrWhiteSpace(x));
             return commands;
         }

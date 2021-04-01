@@ -6,12 +6,13 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Seas0nPass.Interfaces;
-using System.IO;
-using System.Diagnostics;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models
@@ -28,7 +29,7 @@ namespace Seas0nPass.Models
 
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this._firmwareVersionModel = firmwareVersionModel;           
+            _firmwareVersionModel = firmwareVersionModel;           
         }
 
         public IEnumerable<string> GetProgramsToWarnNames()

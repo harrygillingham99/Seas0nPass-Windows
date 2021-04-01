@@ -6,10 +6,11 @@
 //  http://firecore.com
 //
 ////
+
 using System;
+using System.IO;
 using System.Linq;
 using Seas0nPass.Interfaces;
-using System.IO;
 
 namespace Seas0nPass.Models
 {

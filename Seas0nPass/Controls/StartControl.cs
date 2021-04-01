@@ -6,13 +6,14 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Drawing;
-using System.Windows.Forms;
-using Seas0nPass.Interfaces;
-using Seas0nPass.CustomEventArgs;
-using Seas0nPass.Models;
 using System.Threading;
+using System.Windows.Forms;
+using Seas0nPass.CustomEventArgs;
+using Seas0nPass.Interfaces;
+using Seas0nPass.Models;
 
 namespace Seas0nPass.Controls
 {
@@ -44,7 +45,7 @@ namespace Seas0nPass.Controls
         private void ipswPictureBox_Click(object sender, EventArgs e)
         {
             string fileName = string.Empty;
-            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+            if ((ModifierKeys & Keys.Shift) == Keys.Shift)
             {
                 var dialog = new OpenFileDialog();
                 dialog.Filter = "IPSW files (*.ipsw)|*.ipsw";
@@ -130,10 +131,7 @@ namespace Seas0nPass.Controls
             SetPressedState((Control)sender, false);
         }
 
-        public SynchronizationContext SyncContext
-        {
-            get { return new WindowsFormsSynchronizationContext(); }
-        }
+        public SynchronizationContext SyncContext => new WindowsFormsSynchronizationContext();
 
 
         public void ResetState()

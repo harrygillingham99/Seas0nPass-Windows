@@ -6,12 +6,13 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using Seas0nPass.Interfaces;
-using System.IO;
-using System.Configuration;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models
@@ -24,17 +25,14 @@ namespace Seas0nPass.Models
         {
             InitBinaries();
             InitVersionsList();
-            SelectedVersion = KnownVersions.Where(x => x.Code == DefaultVersion).FirstOrDefault();
+            SelectedVersion = KnownVersions.FirstOrDefault(x => x.Code == DefaultVersion);
         }
 
         public List<FirmwareVersion> KnownVersions { get; set; }
         private FirmwareVersion _selectedVersion;
         public FirmwareVersion SelectedVersion
         {
-            get
-            {
-                return _selectedVersion;
-            }
+            get => _selectedVersion;
             set
             {
                 _customFileLocation = null;
@@ -69,42 +67,18 @@ namespace Seas0nPass.Models
             throw new InvalidOperationException("Unknown firmware version");
         }
 
-        private string DownloadedFirmwarePath
-        {
-            get
-            {
-                return Path.Combine(MiscUtils.DOCUMENTS_HOME, "Downloads", GetOriginalFileName());
-            }
-        }
+        private string DownloadedFirmwarePath => Path.Combine(MiscUtils.DOCUMENTS_HOME, "Downloads", GetOriginalFileName());
 
-        public string PatchedFirmwarePath
-        {
-            get
-            {
-                return Path.Combine(MiscUtils.DOCUMENTS_HOME, GetPatchedFirmwareName());
-            }
-        }
+        public string PatchedFirmwarePath => Path.Combine(MiscUtils.DOCUMENTS_HOME, GetPatchedFirmwareName());
 
-        public string AppDataFolder
-        {
-            get
-            {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Seas0nPass", GetFolderName());
-            }
-        }
+        public string AppDataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Seas0nPass", GetFolderName());
 
         private string _customFileLocation;
 
         public string ExistingFirmwarePath
         {
-            get
-            {
-                return String.IsNullOrWhiteSpace(_customFileLocation) ? DownloadedFirmwarePath : _customFileLocation;
-            }
-            set
-            {
-                _customFileLocation = value;
-            }
+            get => string.IsNullOrWhiteSpace(_customFileLocation) ? DownloadedFirmwarePath : _customFileLocation;
+            set => _customFileLocation = value;
         }
 
         public string CorrectFirmwareMd5
@@ -147,7 +121,7 @@ namespace Seas0nPass.Models
                 var vars = new Dictionary<string, string>();
                 string commandsText = sr.ReadToEnd();
                 UniversalPatch.GetVariables(vars, commandsText);
-                return new FirmwareVersion()
+                return new FirmwareVersion
                 {
                     Code = vars["$fw_code"],
                     Name = vars["$name"],

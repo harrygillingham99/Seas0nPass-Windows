@@ -6,6 +6,7 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Collections.Generic;
 
@@ -13,14 +14,12 @@ namespace Seas0nPass.Interfaces
 {
     public interface IMainView
     {
-        bool ConfirmITunesAutomation();
         void ShowDownloadFailedMessage();
         void ShowControl(IView control);
         void ShowTetherMessage(string fwName);
         void ShowNotEnoughFreeSpaceMessage();
         void ShowCantAccessOriginalFirmwareMessage(string fileName);
         void ShowManualRestoreInstructions(string fileName);
-        void ShowCompatibleITunesVersionIsNotInstalled(string requiredITunesVersion, string installedITunesVersion);
         void ShowProgramsWarning(IEnumerable<string> programNames);
         void ShowCrashMessage();
 

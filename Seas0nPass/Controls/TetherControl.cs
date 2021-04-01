@@ -24,7 +24,7 @@ namespace Seas0nPass.Controls
 
         public void SetMessageText(string text)
         {
-            Action action = delegate { this.label.Text = text; };
+            Action action = delegate { label.Text = text; };
 
             if (InvokeRequired)
                 Invoke(action);

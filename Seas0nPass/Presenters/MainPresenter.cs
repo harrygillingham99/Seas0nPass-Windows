@@ -10,7 +10,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Seas0nPass.CustomEventArgs;
 using Seas0nPass.Interfaces;
 using Seas0nPass.Utils;
@@ -39,7 +38,6 @@ namespace Seas0nPass.Presenters
         private PatchPresenter _patchPresetner;
 
         private IStartView _startControl;
-        private SynchronizationContext _syncContext;
         private ITetherModel _tetherModel;
         private TetherPresenter _tetherPresenter;
         private ITetherSuccessControl _tetherSuccessControl;
@@ -55,7 +53,6 @@ namespace Seas0nPass.Presenters
         private void InstantiateModelsAndViews()
         {
             _startControl = IoC.Resolve<IStartView>();
-            _syncContext = _startControl.SyncContext;
             _downloadModel = IoC.Resolve<IDownloadModel>();
             _downloadView = IoC.Resolve<IDownloadView>();
             _patchControl = IoC.Resolve<IPatchView>();

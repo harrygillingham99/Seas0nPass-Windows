@@ -24,12 +24,12 @@ namespace Seas0nPass.Controls
 
         public void SetMessageText(string text)
         {
-            this.label.Text = text;
+            label.Text = text;
         }
 
         public void UpdateProgress(int value)
         {
-            Action action = delegate { this.progressBar.Value = value; this.progressBar.Refresh(); };
+            Action action = delegate { progressBar.Value = value; progressBar.Refresh(); };
 
             if (InvokeRequired)
                 Invoke(action);

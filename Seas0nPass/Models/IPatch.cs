@@ -6,6 +6,7 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 
 namespace Seas0nPass.Models

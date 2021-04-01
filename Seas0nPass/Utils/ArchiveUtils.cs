@@ -6,19 +6,20 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace Seas0nPass.Utils
 {
     public static class ArchiveUtils
     {
 
-        public static void CreateSample(string outPathname, string password, List<String> contents)
+        public static void CreateSample(string outPathname, string password, List<string> contents)
         {
 
             FileStream fsOut = SafeFile.Create(outPathname);
@@ -66,7 +67,7 @@ namespace Seas0nPass.Utils
 
             byte[] dataBuffer = new byte[4096];
 
-            using (System.IO.Stream fs = new FileStream(gzipFileName, FileMode.Open, FileAccess.Read))
+            using (Stream fs = new FileStream(gzipFileName, FileMode.Open, FileAccess.Read))
             {
                 using (GZipInputStream gzipStream = new GZipInputStream(fs))
                 {
@@ -89,7 +90,7 @@ namespace Seas0nPass.Utils
             {
                 FileStream fs = SafeFile.OpenRead(archiveFilenameIn);
                 zf = new ZipFile(fs);
-                if (!String.IsNullOrEmpty(password))
+                if (!string.IsNullOrEmpty(password))
                 {
                     zf.Password = password;		// AES encrypted entries are handled automatically
                 }
@@ -99,7 +100,7 @@ namespace Seas0nPass.Utils
                     {
                         continue;			// Ignore directories
                     }
-                    String entryFileName = zipEntry.Name;
+                    string entryFileName = zipEntry.Name;
                     // to remove the folder from the entry:- entryFileName = Path.GetFileName(entryFileName);
                     // Optionally match entrynames against a selection list here to skip as desired.
                     // The unpacked length is available in the zipEntry.Size property.
@@ -108,7 +109,7 @@ namespace Seas0nPass.Utils
                     Stream zipStream = zf.GetInputStream(zipEntry);
 
                     // Manipulate the output filename here as desired.
-                    String fullZipToPath = Path.Combine(outFolder, entryFileName);
+                    string fullZipToPath = Path.Combine(outFolder, entryFileName);
                     string directoryName = Path.GetDirectoryName(fullZipToPath);
                     if (directoryName.Length > 0)
                         SafeDirectory.CreateDirectory(directoryName);
@@ -145,7 +146,7 @@ namespace Seas0nPass.Utils
                     {
                         continue;			// Ignore directories
                     }
-                    String entryFileName = zipEntry.Name;
+                    string entryFileName = zipEntry.Name;
                     // to remove the folder from the entry:- entryFileName = Path.GetFileName(entryFileName);
                     // Optionally match entrynames against a selection list here to skip as desired.
                     // The unpacked length is available in the zipEntry.Size property.
@@ -154,7 +155,7 @@ namespace Seas0nPass.Utils
                     Stream zipStream = zf.GetInputStream(zipEntry);
 
                     // Manipulate the output filename here as desired.
-                    String fullZipToPath = Path.Combine(outFolder, entryFileName);
+                    string fullZipToPath = Path.Combine(outFolder, entryFileName);
                     string directoryName = Path.GetDirectoryName(fullZipToPath);
                     if (directoryName.Length > 0)
                         SafeDirectory.CreateDirectory(directoryName);

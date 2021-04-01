@@ -1,11 +1,14 @@
-﻿namespace Seas0nPass.Controls
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Seas0nPass.Controls
 {
     partial class DfuSuccessControl
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -119,10 +122,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label1;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Panel panel1;
+        private Button button;
+        private PictureBox pictureBox1;
+        private Label label1;
     }
 }

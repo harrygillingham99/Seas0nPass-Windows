@@ -118,7 +118,6 @@
     <Compile Include="Interfaces\IPatchView.cs" />
     <Compile Include="Interfaces\IStartView.cs" />
     <Compile Include="Interfaces\ITetherView.cs" />
-    <Compile Include="Interfaces\ITunesInfo.cs" />
     <Compile Include="Interfaces\IView.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="Utils\LogUtil.cs" />

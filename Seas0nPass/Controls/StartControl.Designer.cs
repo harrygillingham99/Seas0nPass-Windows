@@ -1,11 +1,14 @@
-﻿namespace Seas0nPass.Controls
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Seas0nPass.Controls
 {
     partial class StartControl
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -143,11 +146,11 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.PictureBox ipswPictureBox;
-        private System.Windows.Forms.Label ipswLabel;
-        private System.Windows.Forms.PictureBox tetheredPictureBox;
-        private System.Windows.Forms.Label tetherLabel;
-        private System.Windows.Forms.ContextMenuStrip ipswContextMenuStrip;
+        private TableLayoutPanel tableLayoutPanel1;
+        private PictureBox ipswPictureBox;
+        private Label ipswLabel;
+        private PictureBox tetheredPictureBox;
+        private Label tetherLabel;
+        private ContextMenuStrip ipswContextMenuStrip;
     }
 }

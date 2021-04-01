@@ -6,11 +6,13 @@
 //  http://firecore.com
 //
 ////
+
 using System;
-using System.Windows.Forms;
-using Seas0nPass.Presenters;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Windows.Forms;
+using Seas0nPass.Presenters;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass
@@ -46,9 +48,9 @@ namespace Seas0nPass
             }
         }
 
-        static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            Exception ex = e.Exception as Exception;
+            Exception ex = e.Exception;
             Trace.WriteLine("!!! Unhandled Exception caught in Application_ThreadException !!!");
             if (ex != null)
                 LogUtil.LogException(ex);

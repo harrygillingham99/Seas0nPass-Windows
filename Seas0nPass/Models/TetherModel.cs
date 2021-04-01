@@ -6,13 +6,13 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Collections.Generic;
-using Seas0nPass.Interfaces;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Globalization;
+using System.IO;
+using Seas0nPass.Interfaces;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models
@@ -135,21 +135,15 @@ namespace Seas0nPass.Models
         public event EventHandler ProcessFinished;
         public event EventHandler CurrentMessageChanged;
 
-        public string CurrentMessage
-        {
-            get { return _currentMessage; }
-        }
+        public string CurrentMessage => _currentMessage;
 
         private int _progressPercentage;
-        public int ProgressPercentage
-        {
-            get { return _progressPercentage; }
-        }
+        public int ProgressPercentage => _progressPercentage;
 
         private IFirmwareVersionModel _firmwareVersionModel;
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this._firmwareVersionModel = firmwareVersionModel;
+            _firmwareVersionModel = firmwareVersionModel;
         }
     }
 }

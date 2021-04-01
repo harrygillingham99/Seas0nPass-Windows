@@ -6,10 +6,11 @@
 //  http://firecore.com
 //
 ////
+
 using System;
-using Seas0nPass.Interfaces;
-using System.Xml.Serialization;
 using System.IO;
+using System.Xml.Serialization;
+using Seas0nPass.Interfaces;
 using Seas0nPass.Utils;
 
 namespace Seas0nPass.Models

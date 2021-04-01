@@ -24,7 +24,7 @@ namespace Seas0nPass.Controls
 
         public void SetMessageText(string text)
         {
-            Action action = () => this.label.Text = text; ;
+            Action action = () => label.Text = text; ;
             if (InvokeRequired)
                 Invoke(action);
             else
@@ -33,7 +33,7 @@ namespace Seas0nPass.Controls
 
         public void UpdateProgress(int value)
         {
-            Action action = delegate { this.progressBar.Value = value; this.progressBar.Refresh(); };
+            Action action = delegate { progressBar.Value = value; progressBar.Refresh(); };
 
             if (InvokeRequired)
                 Invoke(action);

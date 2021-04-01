@@ -6,9 +6,10 @@
 //  http://firecore.com
 //
 ////
+
 using System;
-using Seas0nPass.Interfaces;
 using System.IO;
+using Seas0nPass.Interfaces;
 
 namespace Seas0nPass.Presenters
 {
@@ -22,10 +23,7 @@ namespace Seas0nPass.Presenters
         }
 
         private ProcessResult _result = ProcessResult.Completed;
-        public ProcessResult Result
-        {
-            get { return _result; }
-        }
+        public ProcessResult Result => _result;
 
         private IDownloadModel _model;
         private IDownloadView _view;
@@ -36,13 +34,13 @@ namespace Seas0nPass.Presenters
 
         public void SetFirmwareVersionModel(IFirmwareVersionModel firmwareVersionModel)
         {
-            this._firmwareVersionModel = firmwareVersionModel;
+            _firmwareVersionModel = firmwareVersionModel;
         }
 
         public DownloadPresenter(IDownloadModel model, IDownloadView view)
         {
-            this._model = model;
-            this._view = view;
+            _model = model;
+            _view = view;
 
             model.ProgressChanged += model_ProgressChanged;
             view.ActionButtonClicked += view_ActionButtonClicked;

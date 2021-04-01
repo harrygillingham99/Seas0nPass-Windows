@@ -6,14 +6,16 @@
 //  http://firecore.com
 //
 ////
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Diagnostics;
-using System.Security.Cryptography;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Windows.Forms;
 
 namespace Seas0nPass.Utils
 {
@@ -32,14 +34,14 @@ namespace Seas0nPass.Utils
         public static readonly string PATCHES_DIRECTORY = Path.Combine(WORKING_FOLDER, "PATCHES");
         public static readonly string COMMANDS_FILE_NAME = "commands.fc";
 
-        public static readonly string DOCUMENTS_HOME = null;
+        public static readonly string DOCUMENTS_HOME;
 
         static MiscUtils()
         {
             string myDocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             if (string.IsNullOrWhiteSpace(myDocumentsPath)) // currupted MyDocuments path
             {
-                myDocumentsPath = System.Windows.Forms.Application.StartupPath; // use startup path
+                myDocumentsPath = Application.StartupPath; // use startup path
             }
 
             DOCUMENTS_HOME = Path.Combine(myDocumentsPath, "Seas0nPass");
@@ -88,8 +90,7 @@ namespace Seas0nPass.Utils
                     LogUtil.LogException(ex);
                     if (SafeDirectory.EnumerateFiles(dirPath).Any())
                         throw;
-                    else
-                        return; // Can't delete dir, but it is empty => skip it
+                    return; // Can't delete dir, but it is empty => skip it
                 }
             }
             SafeDirectory.CreateDirectory(dirPath);
@@ -97,7 +98,7 @@ namespace Seas0nPass.Utils
 
         public static void CopyDirectory(string src, string dst)
         {
-            String[] files;
+            string[] files;
 
             if (dst[dst.Length - 1] != Path.DirectorySeparatorChar)
                 dst += Path.DirectorySeparatorChar;
@@ -118,13 +119,13 @@ namespace Seas0nPass.Utils
 
         private static IEnumerable<ProcessStartInfo> ParseResource(string resourceName)
         {
-            var lines = Seas0nPass.ScriptResource.ResourceManager.GetString(resourceName);
+            var lines = ScriptResource.ResourceManager.GetString(resourceName);
 
             foreach (var line in lines.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var exePath = line.Substring(0, line.IndexOf(' ')).Trim();
                 var args = line.Substring(exePath.Length).Trim();
-                yield return new ProcessStartInfo()
+                yield return new ProcessStartInfo
                 {
                     FileName = exePath,
                     Arguments = args,
@@ -132,8 +133,6 @@ namespace Seas0nPass.Utils
                     WorkingDirectory = SafeDirectory.GetCurrentDirectory(),
                 };
             }
-
-            yield break;
         }
 
         public static void OpenExplorerWindow(string fileToSelect)
@@ -148,7 +147,7 @@ namespace Seas0nPass.Utils
             // it doesn't matter if there is a space after ','
             string argument =  string.Format("/select, \"{0}\"",fileToSelect);
 
-            System.Diagnostics.Process.Start("explorer.exe", argument);
+            Process.Start("explorer.exe", argument);
         }
 
         public static void CleanUp()
