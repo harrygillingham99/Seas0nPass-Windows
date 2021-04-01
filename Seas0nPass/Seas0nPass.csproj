@@ -232,6 +232,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <EmbeddedResource Include="Resources\ICSharpCode.SharpZipLib.dll" />
     <EmbeddedResource Include="Resources\Binaries.zip" />
     <None Include="Resources\Binaries\Cydia.tgz" />
