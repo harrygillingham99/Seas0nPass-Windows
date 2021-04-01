@@ -24,8 +24,8 @@ namespace Seas0nPass.Models
         public void StartProcess()
         {
             var worker = new BackgroundWorker();
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            worker.DoWork += worker_DoWork;
+            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
 
             worker.RunWorkerAsync();
         }
@@ -86,8 +86,8 @@ namespace Seas0nPass.Models
 
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.RedirectStandardOutput = true;
-            p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => HandleOutputData(e.Data));
-            p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => HandleOutputData(e.Data));
+            p.OutputDataReceived += (sender, e) => HandleOutputData(e.Data);
+            p.ErrorDataReceived += (sender, e) => HandleOutputData(e.Data);
 
             p.Start();
 

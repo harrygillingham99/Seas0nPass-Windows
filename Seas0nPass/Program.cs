@@ -24,8 +24,8 @@ namespace Seas0nPass
         static void Main()
         {
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);            
-            Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledExceptionHandler);               
+            Application.ThreadException += Application_ThreadException;
+            AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;               
 
             new HookResolver();           
 
@@ -35,7 +35,7 @@ namespace Seas0nPass
             LogUtil.LogEvent("Application start");
             LogUtil.LogEvent($"{Application.ProductName} {Application.ProductVersion}");
             
-            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+            Application.ApplicationExit += Application_ApplicationExit;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var form = new MainForm();

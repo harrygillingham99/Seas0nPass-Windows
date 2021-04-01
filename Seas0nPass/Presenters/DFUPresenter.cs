@@ -23,9 +23,9 @@ namespace Seas0nPass.Presenters
         {
             this._model = model;
             this._view = view;
-            model.CurrentMessageChanged += new EventHandler(model_CurrentMessageChanged);
-            model.ProgressChanged += new EventHandler(model_ProgressChanged);
-            model.ProcessFinished += new EventHandler(model_ProcessFinished);
+            model.CurrentMessageChanged += model_CurrentMessageChanged;
+            model.ProgressChanged += model_ProgressChanged;
+            model.ProcessFinished += model_ProcessFinished;
         }
 
         void model_ProgressChanged(object sender, EventArgs e)

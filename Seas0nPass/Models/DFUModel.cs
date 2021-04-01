@@ -87,7 +87,7 @@ namespace Seas0nPass.Models
                 files.Add(MiscUtils.IBEC_FILE_NAME);
             string arguments = string.Join(" ", files);
 
-            LogUtil.LogEvent(string.Format("DFU process starting for {0}", arguments));
+            LogUtil.LogEvent($"DFU process starting for {arguments}");
             RunDfuProcess(arguments);
         }
 
@@ -101,8 +101,8 @@ namespace Seas0nPass.Models
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.RedirectStandardOutput = true;
-            p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => HandleOutputData(e.Data));
-            p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => HandleOutputData(e.Data));
+            p.OutputDataReceived += (sender, e) => HandleOutputData(e.Data);
+            p.ErrorDataReceived += (sender, e) => HandleOutputData(e.Data);
 
             p.Start();
             p.BeginOutputReadLine();
@@ -111,7 +111,8 @@ namespace Seas0nPass.Models
             p.WaitForExit();
             if (p.ExitCode != 0)
             {
-                var errorString = string.Format("Process: {0}, args: {1} exited with non-zero code", p.StartInfo.FileName, p.StartInfo.Arguments);
+                var errorString =
+                    $"Process: {p.StartInfo.FileName}, args: {p.StartInfo.Arguments} exited with non-zero code";
                 LogUtil.LogEvent(errorString);
                 throw new InvalidOperationException(errorString);
             }
@@ -122,7 +123,7 @@ namespace Seas0nPass.Models
             if (data == null)
                 return;
 
-            LogUtil.LogEvent(string.Format("Output received: {0}", data));
+            LogUtil.LogEvent($"Output received: {data}");
 
             if (data.StartsWith("::"))
             {

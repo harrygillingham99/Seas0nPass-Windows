@@ -104,9 +104,7 @@
     <Compile Include="Utils\HookResolver.cs" />
     <Compile Include="Interfaces\IFirmwareVersionDetector.cs" />
     <Compile Include="Interfaces\IFirmwareVersionModel.cs" />
-    <Compile Include="Interfaces\IITunesAutomationModel.cs" />
     <Compile Include="Interfaces\IFreeSpaceModel.cs" />
-    <Compile Include="Interfaces\IITunesInfoProvider.cs" />
     <Compile Include="Interfaces\IMainModel.cs" />
     <Compile Include="Interfaces\ITetherModel.cs" />
     <Compile Include="Interfaces\ITetherSuccessControl.cs" />
@@ -138,9 +136,7 @@
     </Compile>
     <Compile Include="Models\FirmwareVersion.cs" />
     <Compile Include="Models\FirmwareVersionDetector.cs" />
-    <Compile Include="Models\ITunesAutomationModel.cs" />
     <Compile Include="Models\FreeSpaceModel.cs" />
-    <Compile Include="Models\ITunesInfoProvider.cs" />
     <Compile Include="Models\PatchCommandException.cs" />
     <Compile Include="Models\PatchCommands\CommandResult.cs" />
     <Compile Include="Models\PatchCommands\CommentCommand.cs" />

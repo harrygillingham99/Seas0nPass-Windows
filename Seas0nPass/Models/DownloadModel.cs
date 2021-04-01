@@ -57,7 +57,7 @@ namespace Seas0nPass.Models
         public void StartDownload()
         {            
             var worker = new BackgroundWorker();
-            worker.DoWork += new DoWorkEventHandler((sender, e) => PerformStart());
+            worker.DoWork += (sender, e) => PerformStart();
             worker.RunWorkerAsync();
         }
 

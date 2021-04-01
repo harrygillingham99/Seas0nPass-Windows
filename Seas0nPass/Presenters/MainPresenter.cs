@@ -6,52 +6,51 @@
 //  http://firecore.com
 //
 ////
-using System;
-using System.Linq;
-using Seas0nPass.Interfaces;
-using Seas0nPass.CustomEventArgs;
-using System.IO;
-using System.Threading;
-using Seas0nPass.Utils;
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Seas0nPass.CustomEventArgs;
+using Seas0nPass.Interfaces;
+using Seas0nPass.Utils;
 
 namespace Seas0nPass.Presenters
 {
     public class MainPresenter
     {
-        private DfuPresenter _dfuPresenter;
-        private PatchPresenter _patchPresetner;
-        private TetherPresenter _tetherPresenter;
-        private IMainView _view;
-        public MainPresenter(IMainView view)
-        {
-            this._view = view;
-        }
-
-        private IStartView _startControl;
-        private IDownloadModel _downloadModel;
-        private IDownloadView _downloadView;
-        private IPatchView _patchControl;
-        private IPatchModel _patchModel;
         private IDfuView _dfuControl;
         private IDfuModel _dfuModel;
-        private IMainModel _mainModel;
-
-        private DownloadPresenter _downloadPresenter;
+        private DfuPresenter _dfuPresenter;
 
         private IDfuSuccessControl _dfuSuccessControl;
-        private ITetherSuccessControl _tetherSuccessControl;
-        private IFirmwareVersionModel _firmwareVersionModel;
-        private IFirmwareVersionDetector _firmwareVersionDetector;
+        private IDownloadModel _downloadModel;
 
-        private ITetherView _tetherView;
-        private ITetherModel _tetherModel;
-        private IITunesAutomationModel _iTunesAutomationModel;
+        private DownloadPresenter _downloadPresenter;
+        private IDownloadView _downloadView;
+        private IFirmwareVersionDetector _firmwareVersionDetector;
+        private IFirmwareVersionModel _firmwareVersionModel;
 
 
         private IFreeSpaceModel _freeSpaceModel;
-        private IITunesInfoProvider _iTunesInfoProvider;
+        private IMainModel _mainModel;
+        private IPatchView _patchControl;
+        private IPatchModel _patchModel;
+        private PatchPresenter _patchPresetner;
+
+        private IStartView _startControl;
         private SynchronizationContext _syncContext;
+        private ITetherModel _tetherModel;
+        private TetherPresenter _tetherPresenter;
+        private ITetherSuccessControl _tetherSuccessControl;
+
+        private ITetherView _tetherView;
+        private readonly IMainView _view;
+
+        public MainPresenter(IMainView view)
+        {
+            _view = view;
+        }
 
         private void InstantiateModelsAndViews()
         {
@@ -71,12 +70,6 @@ namespace Seas0nPass.Presenters
             _tetherModel = IoC.Resolve<ITetherModel>();
             _firmwareVersionDetector = IoC.Resolve<IFirmwareVersionDetector>();
             _freeSpaceModel = IoC.Resolve<IFreeSpaceModel>();
-            _iTunesInfoProvider = IoC.Resolve<IITunesInfoProvider>();
-
-            _iTunesAutomationModel = IoC.Resolve<IITunesAutomationModel>();
-            _iTunesAutomationModel.FirmwareVersionModel = _firmwareVersionModel;
-            _iTunesAutomationModel.SyncContext = _syncContext;
-            _iTunesAutomationModel.TunesInfoProvider = _iTunesInfoProvider;
 
             _mainModel.SetFirmwareVersionModel(_firmwareVersionModel);
             _downloadModel.SetFirmwareVersionModel(_firmwareVersionModel);
@@ -112,7 +105,7 @@ namespace Seas0nPass.Presenters
 
         private void CheckForProgramsToWarn()
         {
-            var programsToWarn = _mainModel.GetProgramsToWarnNames();
+            var programsToWarn = _mainModel.GetProgramsToWarnNames().ToList();
             if (!programsToWarn.Any())
                 return;
             _view.ShowProgramsWarning(programsToWarn);
@@ -130,15 +123,7 @@ namespace Seas0nPass.Presenters
 
             InstantiateModelsAndViews();
 
-            _view.Loaded += new EventHandler(view_Loaded);
-
-            TunesInfo iTunesInfo = _iTunesInfoProvider.CheckITunesVersion();
-            if (!iTunesInfo.IsCompatible)
-            {
-                _view.ShowCompatibleITunesVersionIsNotInstalled(iTunesInfo.RequiredVersion, iTunesInfo.InstalledVersion);
-                return false;
-            }
-          
+            _view.Loaded += view_Loaded;
 
             _startControl.InitFirmwaresList(_firmwareVersionModel.KnownVersions.ToArray());
 
@@ -148,11 +133,11 @@ namespace Seas0nPass.Presenters
             _dfuSuccessControl.ButtonClicked += dfuSuccessControl_ButtonClicked;
             _tetherSuccessControl.ButtonClicked += tetherSuccessControl_ButtonClicked;
             ShowStartPage();
-            
+
             return true;
         }
 
-        void view_Loaded(object sender, EventArgs e)
+        private void view_Loaded(object sender, EventArgs e)
         {
             CheckForProgramsToWarn();
         }
@@ -221,7 +206,7 @@ namespace Seas0nPass.Presenters
 
             var fileName = e.FileName;
 
-            if (!String.IsNullOrEmpty(fileName))
+            if (!string.IsNullOrEmpty(fileName))
             {
                 LogUtil.LogEvent($"User has manually selected original firmware path: {fileName}");
                 try
@@ -275,13 +260,8 @@ namespace Seas0nPass.Presenters
         {
             _view.ShowControl(_dfuSuccessControl);
 
-            if (_view.ConfirmITunesAutomation())
-                _iTunesAutomationModel.Run();
-            else
-            {
-                MiscUtils.OpenExplorerWindow(_firmwareVersionModel.PatchedFirmwarePath);
-                _view.ShowManualRestoreInstructions(Path.GetFileName(_firmwareVersionModel.PatchedFirmwarePath));
-            }
+            MiscUtils.OpenExplorerWindow(_firmwareVersionModel.PatchedFirmwarePath);
+            _view.ShowManualRestoreInstructions(Path.GetFileName(_firmwareVersionModel.PatchedFirmwarePath));
         }
     }
 }

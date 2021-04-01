@@ -67,7 +67,7 @@ namespace Seas0nPass.Models
 
         private void UpdateCurrentMessage(string message)
         {
-            LogUtil.LogEvent(string.Format("Patching message changed to: {0}", message));
+            LogUtil.LogEvent($"Patching message changed to: {message}");
 
             _currentMessage = message;
             if (CurrentMessageChanged != null)
@@ -76,31 +76,31 @@ namespace Seas0nPass.Models
 
         private void SaveDfuAndTetherFiles()
         {
-            LogUtil.LogEvent(string.Format("Saving {0} and {1} files", MiscUtils.KERNEL_CACHE_FILE_NAME, MiscUtils.IBSS_FILE_NAME));
+            LogUtil.LogEvent($"Saving {MiscUtils.KERNEL_CACHE_FILE_NAME} and {MiscUtils.IBSS_FILE_NAME} files");
 
             MiscUtils.RecreateDirectory(_firmwareVersionModel.AppDataFolder);
 
-            LogUtil.LogEvent(string.Format("Directory {0} recreated successfully", _firmwareVersionModel.AppDataFolder));
+            LogUtil.LogEvent($"Directory {_firmwareVersionModel.AppDataFolder} recreated successfully");
 
             string kernelcache = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.KERNEL_CACHE_FILE_NAME);
             if (SafeFile.Exists(kernelcache))
             {
                 SafeFile.Copy(kernelcache, Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.KERNEL_CACHE_FILE_NAME), true);
-                LogUtil.LogEvent(string.Format("{0} file copied successfully", MiscUtils.KERNEL_CACHE_FILE_NAME));
+                LogUtil.LogEvent($"{MiscUtils.KERNEL_CACHE_FILE_NAME} file copied successfully");
             }
 
             string iBss = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.FIRMWARE_FOLDER_NAME, MiscUtils.DFU_FOLDER_NAME, MiscUtils.IBSS_FILE_NAME);
             if (SafeFile.Exists(iBss))
             {
                 SafeFile.Copy(iBss, Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.IBSS_FILE_NAME), true);
-                LogUtil.LogEvent(string.Format("{0} file copied successfully", MiscUtils.IBSS_FILE_NAME));
+                LogUtil.LogEvent($"{MiscUtils.IBSS_FILE_NAME} file copied successfully");
             }
 
             string iBec = Path.Combine(MiscUtils.WORKING_FOLDER, MiscUtils.OUTPUT_FOLDER_NAME, MiscUtils.FIRMWARE_FOLDER_NAME, MiscUtils.DFU_FOLDER_NAME, MiscUtils.IBEC_FILE_NAME);
             if (_firmwareVersionModel.SelectedVersion.SaveIBec && SafeFile.Exists(iBec))
             {
                 SafeFile.Copy(iBec, Path.Combine(_firmwareVersionModel.AppDataFolder, MiscUtils.IBEC_FILE_NAME), true);
-                LogUtil.LogEvent(string.Format("{0} file copied successfully", MiscUtils.IBEC_FILE_NAME));
+                LogUtil.LogEvent($"{MiscUtils.IBEC_FILE_NAME} file copied successfully");
             }
         }
 
