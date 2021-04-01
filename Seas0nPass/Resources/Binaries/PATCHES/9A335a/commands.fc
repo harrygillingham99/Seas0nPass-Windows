@@ -28,7 +28,7 @@ set $kernelcache_k_key e236aed1fb278506cc41990b2681e4273dac3e378be55b4da9c292250
 -- unzip firmware
 message "Unzipping..."
 resetdir UNZIPPED_ORIGINAL
-unzip firmware.ipsw UNZIPPED_ORIGINAL
+unzip $firmware.ipsw UNZIPPED_ORIGINAL
 progress 5
 
 -- decrypt_ramdisk
@@ -41,7 +41,7 @@ progress 6
 
 -- patch asr
 resetdir TMP
-copy ipsw\$orig_dmg tmp\our.dmg
+move ipsw\$orig_dmg tmp\our.dmg
 message "Patching ramdisk..."
 exec hfsplus.exe .\tmp\our.dmg extract /usr/sbin/asr .\tmp\asr
 exec hfsplus.exe .\tmp\our.dmg mv /usr/sbin/asr /usr/sbin/asr_backup
@@ -66,15 +66,19 @@ exec hfsplus.exe .\tmp\our.dmg rm /usr/local/standalone/firmware/ICE2.Release.bb
 -- encrypt ramdisk
 message "Encrypting ramdisk..."
 exec xpwntool.exe .\tmp\our.dmg .\output\$orig_dmg -t .\UNZIPPED_ORIGINAL\$orig_dmg
+delete .\tmp\our.dmg
+delete .\UNZIPPED_ORIGINAL\$orig_dmg
 progress 9
 
 -- decrypt filesystem
 message "Decrypting file system..."
 exec vfdecrypt.exe -i .\UNZIPPED_ORIGINAL\$other_dmg -k $other_dmg_k_key -o ipsw/$other_dmg
-copy ipsw\$other_dmg tmp\our-big.dmg
+delete .\UNZIPPED_ORIGINAL\$other_dmg
+move ipsw\$other_dmg tmp\our-big.dmg
 
 -- unpack filesystem image
 exec dmg-bin.exe extract .\tmp\our-big.dmg .\tmp\our-big-hfsimage.dmg
+delete .\tmp\our-big.dmg
 progress 49
 
 message "Patching file system..."
@@ -105,6 +109,9 @@ resetdir tmp\cydia
 ungzip cydia.tgz tmp\cydia cydia.tar
 progress 59
 
+-- move rtadvd away so that Cydia untar can replace it
+exec hfsplus.exe .\tmp\our-big-hfsimage.dmg mv /usr/sbin/rtadvd /usr/sbin/rtadvd_backup
+
 -- add cydia to image
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg untar .\tmp\cydia\cydia.tar
 
@@ -117,14 +124,16 @@ exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\bsubstrate.deb /private/v
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/bsubstrate.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\awkwardtv.deb /private/var/root/Media/Cydia/AutoInstall/awkwardtv.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/awkwardtv.deb
-exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\com.nito.deb /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
-exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
+-- exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\com.nito.deb /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
+-- exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\org.xbmc.repo_0.1-1_iphoneos-arm.deb /private/var/root/Media/Cydia/AutoInstall/org.xbmc.repo_0.1-1_iphoneos-arm.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/org.xbmc.repo_0.1-1_iphoneos-arm.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\syslogd.deb /private/var/root/Media/Cydia/AutoInstall/syslogd.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/syslogd.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\com.firecore.seas0npass.deb /private/var/root/Media/Cydia/AutoInstall/com.firecore.seas0npass.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/com.firecore.seas0npass.deb
+exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\com.firecore.seas0npass.deb /private/var/root/Media/Cydia/AutoInstall/nano_2.0.7-5_iphoneos-arm.deb
+exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/nano_2.0.7-5_iphoneos-arm.deb
 
 progress 177
 
@@ -159,12 +168,6 @@ exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmodh 755 /usr/share
 -- add uncompress
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\patches\$fw_code\uncompress /bin/uncompress
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 755 /bin/uncompress
-
--- patch status
-exec hfsplus.exe .\tmp\our-big-hfsimage.dmg extract /private/var/lib/dpkg/status .\tmp\status
-exec bspatch.exe .\tmp\status .\tmp\status.patched .\patches\$fw_code\status.patch
-exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\tmp\status.patched /private/var/lib/dpkg/status.patched
-
 -- add syslog.conf
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\patches\$fw_code\syslog.conf /private/etc/syslog.conf
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 755 /private/etc/syslog.conf
@@ -181,6 +184,7 @@ message "Creating IPSW..."
 
 -- pack filesystem
 exec dmg-bin.exe build .\tmp\our-big-hfsimage.dmg .\output\$other_dmg
+delete .\tmp\our-big-hfsimage.dmg
 
 copy UNZIPPED_ORIGINAL\kernelcache.release.k66  OUTPUT\kernelcache.release.k66
 copy UNZIPPED_ORIGINAL\BuildManifest.plist  OUTPUT\BuildManifest.plist
@@ -205,7 +209,6 @@ exec bspatch.exe .\OUTPUT\decrypted.kernelcache .\OUTPUT\patched.kernelcache .\p
 exec xpwntool.exe .\OUTPUT\patched.kernelcache .\OUTPUT\encrypted.kernelcache -iv $kernelcache_iv_key -k $kernelcache_k_key -t .\OUTPUT\kernelcache.release.k66
 
 progress 229
-message "Compressing IPSW..."
 delete OUTPUT\Firmware\dfu\iBSS.k66ap.RELEASE.dfu
 delete OUTPUT\Firmware\dfu\patched_iBSS.dfu
 delete OUTPUT\Firmware\dfu\decrypted_iBSS.dfu

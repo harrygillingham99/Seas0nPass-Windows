@@ -88,7 +88,7 @@ namespace Seas0nPass.Controls
         public void InitFirmwaresList(FirmwareVersion[] firmwares)
         {
             ipswContextMenuStrip.Items.Clear();
-            var items = new ToolStripMenuItem[firmwares.Length];
+            ToolStripItem[] items = new ToolStripItem[firmwares.Length];
             for (int i = 0; i < firmwares.Length; i++)
             {
                 items[i] = new ToolStripMenuItem(firmwares[i].Name, null, ipswPictureBoxFirmware_Click)

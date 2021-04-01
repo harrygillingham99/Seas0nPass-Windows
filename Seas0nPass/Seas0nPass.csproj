@@ -242,6 +242,17 @@
     <None Include="Resources\Binaries\DEBS\com.nito.deb" />
     <None Include="Resources\Binaries\DEBS\org.xbmc.repo_0.1-1_iphoneos-arm.deb" />
     <None Include="Resources\Binaries\DEBS\syslogd.deb" />
+    <None Include="Resources\Binaries\PATCHES\10B809\AppleTV.patch" />
+    <None Include="Resources\Binaries\PATCHES\10B809\asr.patch" />
+    <None Include="Resources\Binaries\PATCHES\10B809\commands.fc" />
+    <None Include="Resources\Binaries\PATCHES\10B809\fstab.patch" />
+    <None Include="Resources\Binaries\PATCHES\10B809\iBEC.k66ap.RELEASE.patch" />
+    <None Include="Resources\Binaries\PATCHES\10B809\iBSS.k66ap.RELEASE.patch" />
+    <None Include="Resources\Binaries\PATCHES\10B809\Info.plist" />
+    <None Include="Resources\Binaries\PATCHES\10B809\p0sixspwn.tgz" />
+    <None Include="Resources\Binaries\PATCHES\10B809\restored_external.patch" />
+    <None Include="Resources\Binaries\PATCHES\10B809\Services.patch" />
+    <None Include="Resources\Binaries\PATCHES\10B809\uncompress" />
     <None Include="Resources\Binaries\PATCHES\8C154\AppleTV.patch" />
     <None Include="Resources\Binaries\PATCHES\8C154\asr.patch" />
     <None Include="Resources\Binaries\PATCHES\8C154\commands.fc" />
@@ -380,6 +391,9 @@
     <Content Include="Resources\ProgramsToKill.txt" />
     <None Include="Resources\ProgramsToWarn.txt" />
     <Content Include="Seas0nPass.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Binaries\PATCHES\10B809\.svn\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

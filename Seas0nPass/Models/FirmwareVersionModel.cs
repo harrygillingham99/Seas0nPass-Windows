@@ -19,7 +19,8 @@ namespace Seas0nPass.Models
 {
     public class FirmwareVersionModel : IFirmwareVersionModel
     {
-        private static readonly string DefaultVersion = "9A406a";
+        private static readonly string DefaultVersion = "10B809";
+        private const string BINARIES_RESOURCE_NAME = "Seas0nPass.Resources.Binaries.zip";
 
         public FirmwareVersionModel()
         {

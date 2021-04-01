@@ -25,7 +25,7 @@ set $ibec_dfu_k_key 02d501bc4a5be0d80df13aac8265ebba6739a6b5722e003b971dd5917892
 -- unzip firmware
 message "Unzipping..."
 resetdir UNZIPPED_ORIGINAL
-unzip firmware.ipsw UNZIPPED_ORIGINAL
+unzip $firmware.ipsw UNZIPPED_ORIGINAL
 progress 5
 
 -- decrypt_ramdisk
@@ -38,7 +38,7 @@ progress 6
 
 -- patch asr
 resetdir TMP
-copy ipsw\$orig_dmg tmp\our.dmg
+move ipsw\$orig_dmg tmp\our.dmg
 message "Patching ramdisk..."
 exec hfsplus.exe .\tmp\our.dmg extract /usr/sbin/asr .\tmp\asr
 exec hfsplus.exe .\tmp\our.dmg mv /usr/sbin/asr /usr/sbin/asr_backup
@@ -56,15 +56,19 @@ exec hfsplus.exe .\tmp\our.dmg rm /usr/local/standalone/firmware/ICE2.Release.bb
 -- encrypt ramdisk
 message "Encrypting ramdisk..."
 exec xpwntool.exe .\tmp\our.dmg .\output\$orig_dmg -t .\UNZIPPED_ORIGINAL\$orig_dmg
+delete .\tmp\our.dmg
+delete .\UNZIPPED_ORIGINAL\$orig_dmg
 progress 9
 
 -- decrypt filesystem
 message "Decrypting file system..."
 exec vfdecrypt.exe -i .\UNZIPPED_ORIGINAL\$other_dmg -k $other_dmg_k_key -o ipsw/$other_dmg
-copy ipsw\$other_dmg tmp\our-big.dmg
+delete .\UNZIPPED_ORIGINAL\$other_dmg
+move ipsw\$other_dmg tmp\our-big.dmg
 
 -- unpack filesystem image
 exec dmg-bin.exe extract .\tmp\our-big.dmg .\tmp\our-big-hfsimage.dmg
+delete .\tmp\our-big.dmg
 progress 49
 
 message "Patching file system..."
@@ -101,6 +105,9 @@ resetdir tmp\corona_tar
 ungzip .\patches\$fw_code\corona.tgz tmp\corona_tar corona.tar
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg untar .\tmp\corona_tar\corona.tar
 
+-- move rtadvd away so that Cydia untar can replace it
+exec hfsplus.exe .\tmp\our-big-hfsimage.dmg mv /usr/sbin/rtadvd /usr/sbin/rtadvd_backup
+
 message "Installing software..."
 resetdir tmp\cydia
 ungzip cydia.tgz tmp\cydia cydia.tar
@@ -118,8 +125,8 @@ exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\bsubstrate.deb /private/v
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/bsubstrate.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\awkwardtv.deb /private/var/root/Media/Cydia/AutoInstall/awkwardtv.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/awkwardtv.deb
-exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\com.nito.deb /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
-exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
+-- exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\com.nito.deb /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
+-- exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/com.nito.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\org.xbmc.repo_0.1-1_iphoneos-arm.deb /private/var/root/Media/Cydia/AutoInstall/org.xbmc.repo_0.1-1_iphoneos-arm.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/org.xbmc.repo_0.1-1_iphoneos-arm.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\syslogd.deb /private/var/root/Media/Cydia/AutoInstall/syslogd.deb
@@ -127,7 +134,7 @@ exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cy
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg add .\DEBS\com.firecore.seas0npass.deb /private/var/root/Media/Cydia/AutoInstall/com.firecore.seas0npass.deb
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg chmod 644 /private/var/root/Media/Cydia/AutoInstall/com.firecore.seas0npass.deb
 
-progress 177
+progress 77
 
 -- create symlinks
 exec hfsplus.exe .\tmp\our-big-hfsimage.dmg mkdir /var/stash
@@ -176,6 +183,7 @@ message "Creating IPSW..."
 
 -- pack filesystem
 exec dmg-bin.exe build .\tmp\our-big-hfsimage.dmg .\output\$other_dmg
+delete .\tmp\our-big-hfsimage.dmg
 
 copy UNZIPPED_ORIGINAL\kernelcache.release.k66  OUTPUT\kernelcache.release.k66
 copy UNZIPPED_ORIGINAL\BuildManifest.plist  OUTPUT\BuildManifest.plist
@@ -195,7 +203,6 @@ exec bspatch.exe .\OUTPUT\Firmware\dfu\decrypted_iBEC.dfu .\OUTPUT\Firmware\dfu\
 exec xpwntool.exe .\OUTPUT\Firmware\dfu\patched_iBEC.dfu .\OUTPUT\Firmware\dfu\encrypted_iBEC.dfu -iv $ibec_dfu_iv_key -k $ibec_dfu_k_key -t .\OUTPUT\Firmware\dfu\iBEC.k66ap.RELEASE.dfu
 
 progress 229
-message "Compressing IPSW..."
 delete OUTPUT\Firmware\dfu\iBSS.k66ap.RELEASE.dfu
 delete OUTPUT\Firmware\dfu\patched_iBSS.dfu
 delete OUTPUT\Firmware\dfu\decrypted_iBSS.dfu

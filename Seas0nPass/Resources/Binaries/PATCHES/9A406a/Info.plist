@@ -5,9 +5,9 @@
 	<key>DeleteBuildManifest</key>
 	<false/>
 	<key>DownloadUrl</key>
-	<string>http://appldnld.apple.com/AppleTV/041-3117.20111117.Gj79d/AppleTV2,1_4.4.3_9A405l_Restore.ipsw</string>
+	<string>http://appldnld.apple.com/AppleTV/041-3539.20111215.EQTW8/AppleTV2,1_4.4.4_9A406a_Restore.ipsw</string>
 	<key>Filename</key>
-	<string>AppleTV2,1_4.4.3_9A405l_Restore</string>
+	<string>AppleTV2,1_4.4.4_9A406a_Restore.ipsw</string>
 	<key>FilesystemPatches</key>
 	<dict>
 		<key>Core Files Installation</key>
@@ -52,7 +52,7 @@
 		<key>Restore Ramdisk</key>
 		<dict>
 			<key>File</key>
-			<string>038-3734-008.dmg</string>
+			<string>038-3848-002.dmg</string>
 		</dict>
 		<key>iBEC</key>
 		<dict>
@@ -83,7 +83,7 @@
 		</dict>
 	</dict>
 	<key>Name</key>
-	<string>AppleTV2,1_4.4.3_9A405l</string>
+	<string>AppleTV2,1_4.4.4_9A406a</string>
 	<key>PreInstalledPackages</key>
 	<array>
 		<string>org.saurik.cydia</string>
@@ -101,18 +101,20 @@
 	<key>RestoreRamdiskMountVolume</key>
 	<string>ramdisk</string>
 	<key>RootFilesystem</key>
-	<string>038-3571-022.dmg</string>
+	<string>038-3845-002.dmg</string>
 	<key>RootFilesystemKey</key>
-	<string>6a0dce2b25b42f7de328b6121a16fd282b8bc16a1718f14cc2dbee0f1a4f0e81d0e1eb03</string>
+	<string>a303410067be58e99544200b8b0de7d01b20232ccf1e6cb42fbc7a22e572367715691db2</string>
 	<key>RootFilesystemMountVolume</key>
-	<string>Telluride9A405l.K66OS</string>
+	<string>Telluride9A406a.K66OS</string>
 	<key>RootFilesystemSize</key>
 	<string>1024</string>
 	<key>SHA1</key>
-	<string>438f16c28ae83a6dbf64ea39cced67570d1b05a2</string>
+	<string>6bcf6d6566c581687025def9946c4da378a24668</string>
 	<key>platform</key>
 	<string>3</string>
 	<key>subplatform</key>
 	<string>10</string>
+	<key>Untethered</key>
+	<true/>
 </dict>
 </plist>

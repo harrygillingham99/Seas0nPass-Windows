@@ -71,10 +71,28 @@ namespace Seas0nPass.Models
 
             UpdateProgress(0);
 
-            IEnumerable<string> commands = GetCommands(_commandsText);
+            var commands = GetCommands(_commandsText).ToList();
+
+            var firstCommand = commands[0];
+
             foreach (var command in commands)
             {
-                ExecuteCommand(command);
+                try
+                {
+                    var commandToExecute = command;
+
+                    if (command.Contains(@"$firmware.ipsw"))
+                    {
+                         commandToExecute = command.Replace("$", string.Empty);
+                    }
+
+                    ExecuteCommand(commandToExecute);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
 
             var fullOutputFileName = Path.Combine(SafeDirectory.GetCurrentDirectory(), MiscUtils.OUTPUT_FIRMWARE_NAME);
