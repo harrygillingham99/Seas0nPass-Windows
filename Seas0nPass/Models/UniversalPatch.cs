@@ -81,6 +81,7 @@ namespace Seas0nPass.Models
                 {
                     var commandToExecute = command;
 
+                    //TODO: this is strange but it fixes not being able to find the file for 5.3
                     if (command.Contains(@"$firmware.ipsw"))
                     {
                          commandToExecute = command.Replace("$", string.Empty);
