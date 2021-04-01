@@ -73,8 +73,6 @@ namespace Seas0nPass.Models
 
             var commands = GetCommands(_commandsText).ToList();
 
-            var firstCommand = commands[0];
-
             foreach (var command in commands)
             {
                 try
