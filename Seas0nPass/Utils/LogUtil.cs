@@ -26,13 +26,16 @@ namespace Seas0nPass.Utils
 
         public static void LogEvent(string message)
         {
-            Trace.WriteLine(string.Format("DateTime: {0} Message: {1}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), message));
+            Trace.WriteLine($"DateTime: {DateTime.Now:dd/MM/yyyy HH:mm:ss} Message: {message}");
         }
 
         public static void LogException(Exception ex)
         {
             Trace.WriteLine("Exception occured");
             Trace.WriteLine(FormatExceptionToLog(ex));
+#if DEBUG
+            Debug.WriteLine(FormatExceptionToLog(ex));
+#endif
         }
 
         private static string FormatExceptionToLog(Exception exception)
@@ -82,10 +85,8 @@ namespace Seas0nPass.Utils
                 message.AppendLine("   " + e.GetType().ToString());
                 return (message.ToString());
             }
-            else
-            {
-                return ("   " + e.GetType().ToString());
-            }
+
+            return ("   " + e.GetType().ToString());
         }
 
         private static string GetExceptionMessageStack(Exception e)
@@ -97,10 +98,8 @@ namespace Seas0nPass.Utils
                 message.AppendLine("   " + e.Message);
                 return (message.ToString());
             }
-            else
-            {
-                return ("   " + e.Message);
-            }
+
+            return ("   " + e.Message);
         }
         private static string GetExceptionCallStack(Exception e)
         {
@@ -112,10 +111,8 @@ namespace Seas0nPass.Utils
                 message.AppendLine(e.StackTrace);
                 return (message.ToString());
             }
-            else
-            {
-                return (e.StackTrace);
-            }
+
+            return (e.StackTrace);
         }
     }
 }
